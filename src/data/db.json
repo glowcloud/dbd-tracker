@@ -1,11 +1,7 @@
 {
   "characters": {
-    "killers": [
-      { "id": 0, "name": "The Trapper", "portrait": "00_The_Trapper" }
-    ],
-    "survivors": [
-      { "id": 0, "name": "Dwight Fairfield", "portrait": "00_Dwight_Fairfield" }
-    ]
+    "killers": [{ "id": "00_The_Trapper", "name": "The Trapper" }],
+    "survivors": [{ "id": "00_Dwight_Fairfield", "name": "Dwight Fairfield" }]
   },
   "items": [
     {
@@ -14,8 +10,8 @@
     },
     {
       "category": "flashlights",
-      "types": [{ "name": "something", "image": "something" }],
-      "addons": [{ "name": "something", "image": "something" }]
+      "types": [{ "id": "something", "name": "something" }],
+      "addons": [{ "id": "something", "name": "something" }]
     },
     {
       "category": "keys",
@@ -38,25 +34,70 @@
       "addons": []
     }
   ],
+  "addons": [{ "killer": "id", "id": "something", "name": "something" }],
   "offerings": {
-    "killer": [{ "name": "something", "image": "something" }],
+    "killer": [{ "id": "something", "name": "something" }],
     "survivor": [],
     "general": []
   },
   "perks": {
-    "killer": [{ "name": "something", "image": "something" }],
+    "killer": [{ "id": "something", "name": "something" }],
     "survivor": []
   },
   "realms": [
     {
+      "id": "something",
       "name": "something",
-      "maps": [
-        { "name": "something", "location": "something", "image": "something" }
-      ]
+      "maps": [{ "id": "something", "name": "something" }]
     }
   ],
   "matches": {
-    "killers": [],
-    "survivors": []
+    "killers": [
+      {
+        "timestamp": "datetime",
+        "character": "id",
+        "perks": ["id"],
+        "addons": ["id"],
+        "offering": "id",
+        "map": { "realm": "id", "map": "id" },
+        "survivors": [
+          {
+            "character": "id",
+            "perks": ["id"],
+            "item": { "category": "id", "item": "id", "addons": ["id"] },
+            "offering": "id",
+            "status": "something"
+          }
+        ],
+        "result": "something"
+      }
+    ],
+    "survivors": [
+      {
+        "timestamp": "datetime",
+        "character": "id",
+        "perks": ["id"],
+        "item": { "category": "id", "item": "id", "addons": ["id"] },
+        "offering": "id",
+        "map": { "realm": "id", "map": "id" },
+        "survivors": [
+          {
+            "character": "id",
+            "perks": ["id"],
+            "item": { "category": "id", "item": "id", "addons": ["id"] },
+            "offering": "id",
+            "status": "something"
+          }
+        ],
+        "killer": {
+          "character": "id",
+          "perks": ["id"],
+          "addons": ["id"],
+          "offering": "id"
+        },
+        "status": "something",
+        "result": "something"
+      }
+    ]
   }
 }
