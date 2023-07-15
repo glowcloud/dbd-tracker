@@ -6,7 +6,10 @@ import CharacterChoice from "../components/AddMatch/CharacterChoice";
 
 import killers from "../assets/characters/killers";
 import survivors from "../assets/characters/survivors";
+import killerPerks from "../assets/perks/killer";
+import survivorPerks from "../assets/perks/survivor";
 import ControlButtons from "../components/AddMatch/ControlButtons";
+import PerksChoice from "../components/AddMatch/PerksChoice";
 
 const AddMatch = () => {
   const [step, setStep] = useState(0);
@@ -40,6 +43,35 @@ const AddMatch = () => {
           setData={setData}
         />
       )}
+
+      {/* STEP 2 - PERKS */}
+      {step === 2 && data.side === "killer" && (
+        <PerksChoice
+          perks={killerPerks}
+          setStep={setStep}
+          data={data}
+          setData={setData}
+        />
+      )}
+
+      {step === 2 && data.side === "survivor" && (
+        <PerksChoice
+          perks={survivorPerks}
+          setStep={setStep}
+          data={data}
+          setData={setData}
+        />
+      )}
+
+      {/* STEP 3 - ADDONS / ITEMS */}
+
+      {/* STEP 4 - OFFERING */}
+
+      {/* STEP 5 - MAP */}
+
+      {/* STEP 6 - OPPONENTS */}
+
+      {/* STEP 7 - RESULTS */}
 
       {/* CONTROL BUTTONS */}
       {step > 0 && <ControlButtons setStep={setStep} setData={setData} />}
