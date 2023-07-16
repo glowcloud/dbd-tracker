@@ -20,10 +20,9 @@ const SideChoice = ({ setStep, setData }) => {
                 ...prevData,
                 side: "survivor",
                 sideData: {
-                  item: {},
+                  item: null,
                   status: "",
-                  teammates: [],
-                  killer: {},
+                  killer: null,
                 },
               };
             });
@@ -41,7 +40,7 @@ const SideChoice = ({ setStep, setData }) => {
               return {
                 ...prevData,
                 side: "killer",
-                sideData: { addons: [], opponents: [] },
+                sideData: { addons: [] },
               };
             });
             setStep((prevStep) => prevStep + 1);
