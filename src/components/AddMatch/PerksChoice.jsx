@@ -1,4 +1,4 @@
-import { Box, Button, Divider } from "@mui/material";
+import { Box, Button, Divider, TextField } from "@mui/material";
 import { useState } from "react";
 
 const PerksChoice = ({ perks, setStep, data, setData }) => {
@@ -6,6 +6,7 @@ const PerksChoice = ({ perks, setStep, data, setData }) => {
     data.perks.length > 0 ? data.perks : [null, null, null, null]
   );
   const [chosenSlot, setChosenSlot] = useState(-1);
+  const [search, setSearch] = useState("");
 
   const handleSlotChoice = (index) => {
     if (chosenSlot !== index) {
@@ -45,6 +46,7 @@ const PerksChoice = ({ perks, setStep, data, setData }) => {
 
   return (
     <Box>
+      {/* PERK SLOTS */}
       <Box
         display="flex"
         alignItems="center"
@@ -53,51 +55,32 @@ const PerksChoice = ({ perks, setStep, data, setData }) => {
         py={10}
       >
         {chosenPerks.map((perk, index) => (
-          <Box key={index}>
+          <Box
+            key={index}
+            sx={{
+              width: 100,
+              height: 100,
+              border: "1px solid",
+              borderColor: chosenSlot === index ? "primary.main" : "white",
+              transform: "rotate(45deg)",
+              "&:hover": {
+                borderColor: "primary.dark",
+              },
+            }}
+            onClick={() => {
+              handleSlotChoice(index);
+            }}
+          >
             {perk && (
               <Box
+                component="img"
+                src={perk.image}
+                alt={`${perk.id} Image`}
                 sx={{
                   width: 100,
                   height: 100,
-                  border: "1px solid",
-                  borderColor: chosenSlot === index ? "primary.main" : "white",
-                  transform: "rotate(45deg)",
-                  "&:hover": {
-                    borderColor: "primary.dark",
-                  },
-                }}
-              >
-                <Box
-                  component="img"
-                  src={perk.image}
-                  alt={`${perk.id} Image`}
-                  sx={{
-                    width: 100,
-                    height: 100,
-                    objectFit: "fill",
-                    transform: "rotate(-45deg)",
-                  }}
-                  onClick={() => {
-                    handleSlotChoice(index);
-                  }}
-                />
-              </Box>
-            )}
-            {!perk && (
-              <Box
-                sx={{
-                  border: "1px solid",
-                  borderColor: chosenSlot === index ? "primary.main" : "white",
-                  width: 100,
-                  height: 100,
-                  transform: "rotate(45deg)",
                   objectFit: "contain",
-                  "&:hover": {
-                    borderColor: "primary.dark",
-                  },
-                }}
-                onClick={() => {
-                  handleSlotChoice(index);
+                  transform: "rotate(-45deg)",
                 }}
               />
             )}
@@ -105,6 +88,7 @@ const PerksChoice = ({ perks, setStep, data, setData }) => {
         ))}
       </Box>
 
+      {/* CONTROLS */}
       <Box>
         <Button
           variant="outlined"
@@ -129,32 +113,65 @@ const PerksChoice = ({ perks, setStep, data, setData }) => {
 
       <Divider />
 
+      {/* PERKS */}
       {chosenSlot >= 0 && (
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexWrap="wrap"
-          px={25}
-          pt={10}
-        >
-          {perks.map((perk) => (
-            <Box key={perk.id}>
-              <Box
-                component="img"
-                src={perk.image}
-                alt={`${perk.id} Image`}
-                sx={{
-                  width: 200,
-                  height: 200,
-                  objectFit: "contain",
-                }}
-                onClick={() => {
-                  handlePerkChoice(perk);
-                }}
-              />
-            </Box>
-          ))}
+        <Box>
+          {/* SEARCH BAR */}
+          <Box
+            component="form"
+            autoComplete="off"
+            px={40}
+            py={5}
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <TextField
+              fullWidth
+              label="Search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            flexWrap="wrap"
+            px={25}
+          >
+            {perks
+              .filter((perk) => perk.id.toLowerCase().includes(search))
+              .map((perk) => (
+                <Box
+                  key={perk.id}
+                  sx={{
+                    m: 5,
+                    width: 100,
+                    height: 100,
+                    border: "1px solid white",
+                    transform: "rotate(45deg)",
+                    "&:hover": {
+                      borderColor: "primary.dark",
+                    },
+                  }}
+                  onClick={() => {
+                    handlePerkChoice(perk);
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={perk.image}
+                    alt={`${perk.id} Image`}
+                    sx={{
+                      width: 100,
+                      height: 100,
+                      objectFit: "contain",
+                      transform: "rotate(-45deg)",
+                    }}
+                  />
+                </Box>
+              ))}
+          </Box>
         </Box>
       )}
     </Box>

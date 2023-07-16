@@ -25,10 +25,10 @@ const AddMatch = () => {
 
   return (
     <Box textAlign="center">
-      {/* STEP 0 - CHOOSE YOUR SIDE */}
+      {/* STEP 0 - SIDE */}
       {step === 0 && <SideChoice setStep={setStep} setData={setData} />}
 
-      {/* STEP 1 - CHOOSE YOUR CHARACTER */}
+      {/* STEP 1 - CHARACTER */}
       {step === 1 && data.side === "killer" && (
         <CharacterChoice
           characters={killers}
