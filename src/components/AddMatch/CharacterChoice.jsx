@@ -22,9 +22,9 @@ const CharacterChoice = ({ characters, setStep, setData }) => {
             }}
             onClick={() => {
               setData((prevData) => {
-                return { ...prevData, character: character.id };
+                return { ...prevData, character: character };
               });
-              setStep(2);
+              setStep((prevStep) => prevStep + 1);
             }}
           />
         </Box>

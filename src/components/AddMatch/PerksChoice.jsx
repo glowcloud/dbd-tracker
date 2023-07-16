@@ -3,7 +3,7 @@ import { useState } from "react";
 
 const PerksChoice = ({ perks, setStep, data, setData }) => {
   const [chosenPerks, setChosenPerks] = useState(
-    data.perks.length > 0 ? data.perks : [null, null, null, null]
+    data?.perks?.length > 0 ? data.perks : [null, null, null, null]
   );
   const [chosenSlot, setChosenSlot] = useState(-1);
   const [search, setSearch] = useState("");
@@ -104,7 +104,7 @@ const PerksChoice = ({ perks, setStep, data, setData }) => {
             setData((prevData) => {
               return { ...prevData, perks: chosenPerks };
             });
-            setStep(3);
+            setStep((prevStep) => prevStep + 1);
           }}
         >
           Confirm Perks

@@ -44,7 +44,7 @@ const SideChoice = ({ setStep, setData }) => {
                 sideData: { addons: [], opponents: [] },
               };
             });
-            setStep(1);
+            setStep((prevStep) => prevStep + 1);
           }}
         />
       </Box>
