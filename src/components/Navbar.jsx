@@ -1,5 +1,5 @@
-import { AppBar, Toolbar, Box, Typography, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { AppBar, Toolbar, Box, Typography } from "@mui/material";
+import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/other/bloodpointsIcon.png";
 
 const navItems = [
@@ -28,20 +28,24 @@ const Navbar = () => {
         </Box>
 
         {navItems.map((item) => (
-          <Button
+          <Box
+            component={Link}
             key={item.title}
-            color="inherit"
+            to={item.route}
+            reloadDocument
             sx={{
-              mx: "1rem",
+              textDecoration: "none",
+              mx: 2,
+              "&:visited": {
+                color: "inherit",
+              },
               "&:hover": {
-                background: "none",
                 color: "primary.dark",
               },
             }}
-            onClick={() => navigate(item.route)}
           >
             {item.title}
-          </Button>
+          </Box>
         ))}
       </Toolbar>
     </AppBar>

@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import AddMatch from "./pages/AddMatch";
 import Matches from "./pages/Matches";
 import Layout from "./components/Layout";
+import Match from "./pages/Match";
 
 function App() {
   const theme = createTheme({
@@ -20,6 +21,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/matches" element={<Matches />} />
+            <Route path="/matches/*" element={<Match />} />
             <Route path="/add-match" element={<AddMatch />} />
             <Route path="/*" element={<Navigate to="/" />} />
           </Routes>

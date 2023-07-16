@@ -1,5 +1,6 @@
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import SideChoice from "../components/AddMatch/SideChoice";
 import CharacterChoice from "../components/AddMatch/CharacterChoice";
@@ -23,7 +24,7 @@ import MatchResult from "../components/AddMatch/MatchResult";
       4. offering
       5. survivors DONE
       6. map
-      7. match results
+      7. match results DONE
       8. confirm info
     
     SURVIVOR STEPS
@@ -35,7 +36,7 @@ import MatchResult from "../components/AddMatch/MatchResult";
       6. survivors PARTIALLY DONE (NO ITEMS)
       7. killer PARTIALLY DONE (NO ADDONS)
       8. map
-      9. match results
+      9. match results DONE
       10. confirm info
 */
 
@@ -51,8 +52,33 @@ const AddMatch = () => {
     survivors: [],
     sideData: {},
   });
+  const navigate = useNavigate();
 
-  const handleAddMatch = () => {};
+  const handleAddMatch = async () => {
+    const matchData = {
+      timestamp: Date.now().toString(),
+      side: data.side,
+      character: data.character,
+      perks: data.perks,
+      offering: data.offering,
+      map: data.map,
+      result: data.result,
+      survivors: data.survivors,
+      ...data.sideData,
+    };
+
+    const res = await fetch("http://localhost:3000/matches", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(matchData),
+    });
+
+    console.log(res);
+
+    navigate("/matches");
+  };
 
   return (
     <Box textAlign="center">
