@@ -5,10 +5,6 @@ import { useNavigate } from "react-router-dom";
 import SideChoice from "../components/AddMatch/SideChoice";
 import CharacterChoice from "../components/AddMatch/CharacterChoice";
 
-import killers from "../assets/characters/killers";
-import survivors from "../assets/characters/survivors";
-import killerPerks from "../assets/perks/killer";
-import survivorPerks from "../assets/perks/survivor";
 import ControlButtons from "../components/AddMatch/ControlButtons";
 import PerksChoice from "../components/AddMatch/PerksChoice";
 import Survivors from "../components/AddMatch/Survivors";
@@ -88,17 +84,13 @@ const AddMatch = () => {
       {/* ------------- KILLER STEPS ------------- */}
       {/* STEP 1 - CHARACTER */}
       {step === 1 && data.side === "killer" && (
-        <CharacterChoice
-          characters={killers}
-          setStep={setStep}
-          setData={setData}
-        />
+        <CharacterChoice side="killers" setStep={setStep} setData={setData} />
       )}
 
       {/* STEP 2 - PERKS */}
       {step === 2 && data.side === "killer" && (
         <PerksChoice
-          perks={killerPerks}
+          side="killer"
           setStep={setStep}
           data={data}
           setData={setData}
@@ -120,8 +112,6 @@ const AddMatch = () => {
       {step === 5 && data.side === "killer" && (
         <Survivors
           side={data.side}
-          characters={survivors}
-          perks={survivorPerks}
           setStep={setStep}
           setData={setData}
           data={data}
@@ -143,17 +133,13 @@ const AddMatch = () => {
       {/* ------------- SURVIVOR STEPS ------------- */}
       {/* STEP 1 - CHARACTER */}
       {step === 1 && data.side === "survivor" && (
-        <CharacterChoice
-          characters={survivors}
-          setStep={setStep}
-          setData={setData}
-        />
+        <CharacterChoice side="survivors" setStep={setStep} setData={setData} />
       )}
 
       {/* STEP 2 - PERKS */}
       {step === 2 && data.side === "survivor" && (
         <PerksChoice
-          perks={survivorPerks}
+          side="survivor"
           setStep={setStep}
           data={data}
           setData={setData}
@@ -180,8 +166,6 @@ const AddMatch = () => {
       {step === 6 && data.side === "survivor" && (
         <Survivors
           side={data.side}
-          characters={survivors}
-          perks={survivorPerks}
           setStep={setStep}
           setData={setData}
           data={data}
@@ -190,13 +174,7 @@ const AddMatch = () => {
 
       {/* STEP 7 - KILLER */}
       {step === 7 && data.side === "survivor" && (
-        <Killer
-          characters={killers}
-          perks={killerPerks}
-          setStep={setStep}
-          setData={setData}
-          data={data}
-        />
+        <Killer setStep={setStep} setData={setData} data={data} />
       )}
 
       {/* STEP 9 - MATCH RESULT */}

@@ -6,7 +6,7 @@ import DCIcon from "../../assets/other/DCIcon.png";
 import SacrificedIcon from "../../assets/other/sacrificedIcon.png";
 import EscapedIcon from "../../assets/other/escapedIcon.png";
 
-const Survivors = ({ side, characters, perks, setStep, setData, data }) => {
+const Survivors = ({ side, setStep, setData, data }) => {
   const [chosenCharacters, setChosenCharacters] = useState(
     data?.survivors?.length > 0
       ? data.survivors
@@ -144,8 +144,8 @@ const Survivors = ({ side, characters, perks, setStep, setData, data }) => {
         open={open}
         handleClose={handleClose}
         characterType="survivor"
-        characters={characters}
-        perks={perks}
+        // characters={characters}
+        // perks={perks}
         characterIndex={characterIndex}
         handleAddCharacter={handleAddCharacter}
       />

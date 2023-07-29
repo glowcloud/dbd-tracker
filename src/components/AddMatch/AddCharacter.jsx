@@ -15,8 +15,6 @@ const AddCharacter = ({
   open,
   handleClose,
   characterType,
-  characters,
-  perks,
   handleAddCharacter,
 }) => {
   const [character, setCharacter] = useState({
@@ -52,14 +50,14 @@ const AddCharacter = ({
       >
         {step === 0 && (
           <CharacterChoice
-            characters={characters}
+            side={`${characterType}s`}
             setStep={setStep}
             setData={setCharacter}
           />
         )}
         {step === 1 && (
           <PerksChoice
-            perks={perks}
+            side={characterType}
             setStep={setStep}
             data={character}
             setData={setCharacter}

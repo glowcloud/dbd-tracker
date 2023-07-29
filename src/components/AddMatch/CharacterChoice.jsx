@@ -1,6 +1,19 @@
+import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
+import { supabase } from "../../data/supabaseClient";
 
-const CharacterChoice = ({ characters, setStep, setData }) => {
+const CharacterChoice = ({ side, setStep, setData }) => {
+  const [characters, setCharacters] = useState([]);
+
+  useEffect(() => {
+    const getCharacters = async () => {
+      const { data } = await supabase.from(side).select();
+      setCharacters(data);
+    };
+
+    getCharacters();
+  }, [side]);
+
   return (
     <Box
       display="flex"

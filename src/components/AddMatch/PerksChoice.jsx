@@ -1,12 +1,23 @@
 import { Box, Button, Divider, TextField } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "../../data/supabaseClient";
 
-const PerksChoice = ({ perks, setStep, data, setData }) => {
+const PerksChoice = ({ side, setStep, data, setData }) => {
   const [chosenPerks, setChosenPerks] = useState(
     data?.perks?.length > 0 ? data.perks : [null, null, null, null]
   );
   const [chosenSlot, setChosenSlot] = useState(-1);
   const [search, setSearch] = useState("");
+  const [perks, setPerks] = useState([]);
+
+  useEffect(() => {
+    const getPerks = async () => {
+      const { data } = await supabase.from("perks").select().eq("side", side);
+      setPerks(data);
+    };
+
+    getPerks();
+  }, [side]);
 
   const handleSlotChoice = (index) => {
     if (chosenSlot !== index) {

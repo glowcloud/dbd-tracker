@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box, Button } from "@mui/material";
 import AddCharacter from "./AddCharacter";
 
-const Killer = ({ characters, perks, setStep, setData, data }) => {
+const Killer = ({ setStep, setData, data }) => {
   const [killer, setKiller] = useState(
     data?.sideData?.killer ? data.sideData.killer : null
   );
@@ -98,8 +98,6 @@ const Killer = ({ characters, perks, setStep, setData, data }) => {
         open={open}
         handleClose={handleClose}
         characterType="killer"
-        characters={characters}
-        perks={perks}
         handleAddCharacter={handleAddCharacter}
       />
 
