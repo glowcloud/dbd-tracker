@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Box, Button } from "@mui/material";
 import AddCharacter from "./AddCharacter";
 
-import DCIcon from "../../assets/other/DCIcon.png";
 import SacrificedIcon from "../../assets/other/sacrificedIcon.png";
 import EscapedIcon from "../../assets/other/escapedIcon.png";
 
@@ -120,13 +119,7 @@ const Survivors = ({ side, setStep, setData, data }) => {
             {op && op.status && (
               <Box
                 component="img"
-                src={
-                  op.status === "killed"
-                    ? SacrificedIcon
-                    : op.status === "escaped"
-                    ? EscapedIcon
-                    : DCIcon
-                }
+                src={op.status === "killed" ? SacrificedIcon : EscapedIcon}
                 alt={`Status Image`}
                 sx={{
                   width: 75,
@@ -144,8 +137,6 @@ const Survivors = ({ side, setStep, setData, data }) => {
         open={open}
         handleClose={handleClose}
         characterType="survivor"
-        // characters={characters}
-        // perks={perks}
         characterIndex={characterIndex}
         handleAddCharacter={handleAddCharacter}
       />

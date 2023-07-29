@@ -22,7 +22,6 @@ const SurvivorStatus = ({ setData, setStep }) => {
         >
           <MenuItem value="escaped">Escaped</MenuItem>
           <MenuItem value="killed">Killed</MenuItem>
-          {/* <MenuItem value="disconnected">Disconnected</MenuItem> */}
         </Select>
       </FormControl>
 

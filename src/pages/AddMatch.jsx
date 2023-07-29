@@ -11,6 +11,10 @@ import Survivors from "../components/AddMatch/Survivors";
 import Killer from "../components/AddMatch/Killer";
 import SurvivorStatus from "../components/AddMatch/SurvivorStatus";
 import MatchResult from "../components/AddMatch/MatchResult";
+import MapChoice from "../components/AddMatch/MapChoice";
+import OfferingChoice from "../components/AddMatch/OfferingChoice";
+import KillerAddons from "../components/AddMatch/KillerAddons";
+import SurvivorItem from "../components/AddMatch/SurvivorItem";
 
 /*
     KILLER STEPS
@@ -108,6 +112,24 @@ const AddMatch = () => {
         </Button>
       )}
 
+      {step === 3 && data.side === "killer" && (
+        <KillerAddons
+          killer={data.character}
+          setStep={setStep}
+          setData={setData}
+          data={data}
+        />
+      )}
+
+      {step === 4 && data.side === "killer" && (
+        <OfferingChoice
+          side="killer"
+          setStep={setStep}
+          setData={setData}
+          data={data}
+        />
+      )}
+
       {/* STEP 5 - SURVIVORS */}
       {step === 5 && data.side === "killer" && (
         <Survivors
@@ -116,6 +138,10 @@ const AddMatch = () => {
           setData={setData}
           data={data}
         />
+      )}
+
+      {step === 6 && data.side === "killer" && (
+        <MapChoice setStep={setStep} setData={setData} data={data} />
       )}
 
       {/* STEP 7 - MATCH RESULT */}
@@ -157,6 +183,17 @@ const AddMatch = () => {
         </Button>
       )}
 
+      {step === 3 && data.side === "survivor" && <SurvivorItem />}
+
+      {step === 4 && data.side === "survivor" && (
+        <OfferingChoice
+          side="survivor"
+          setStep={setStep}
+          setData={setData}
+          data={data}
+        />
+      )}
+
       {/* STEP 5 - STATUS */}
       {step === 5 && data.side === "survivor" && (
         <SurvivorStatus setStep={setStep} setData={setData} />
@@ -175,6 +212,10 @@ const AddMatch = () => {
       {/* STEP 7 - KILLER */}
       {step === 7 && data.side === "survivor" && (
         <Killer setStep={setStep} setData={setData} data={data} />
+      )}
+
+      {step === 8 && data.side === "survivor" && (
+        <MapChoice setStep={setStep} setData={setData} data={data} />
       )}
 
       {/* STEP 9 - MATCH RESULT */}
