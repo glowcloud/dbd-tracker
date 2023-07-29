@@ -55,11 +55,13 @@ const Matches = () => {
           {side === "killer" && (
             <KillerCharts
               matches={matches.filter((match) => match.side === side)}
+              chartType="averagePerk"
             />
           )}
           {side === "survivor" && (
             <SurvivorCharts
               matches={matches.filter((match) => match.side === side)}
+              chartType="averagePerk"
             />
           )}
 

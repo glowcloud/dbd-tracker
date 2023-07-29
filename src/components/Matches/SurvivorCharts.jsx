@@ -28,6 +28,72 @@ const getGeneralData = (matches) => {
   });
 };
 
+// AVERAGE ESCAPE RATE BY SURVIVOR
+const getAverageSurvivorData = (matches) => {
+  const dataMap = new Map();
+
+  matches.forEach((match) => {
+    if (match.status) {
+      let result = 0;
+      if (match.status === "escaped") result = 1;
+      if (dataMap.has(match.character.id)) {
+        dataMap.set(
+          match.character.id,
+          dataMap.get(match.character.id) + result
+        );
+      } else {
+        dataMap.set(match.character.id, result);
+      }
+    }
+  });
+
+  return [...dataMap]
+    .map((item) => {
+      return {
+        name: item[0],
+        count:
+          item[1] /
+          matches.filter((match) => match.character.id === item[0]).length,
+      };
+    })
+    .sort((a, b) => b.count - a.count);
+};
+
+// AVERAGE ESCAPE RATE BY PERK
+const getAveragePerkData = (matches) => {
+  const dataMap = new Map();
+
+  matches.forEach((match) => {
+    if (match.status) {
+      let result = 0;
+      if (match.status === "escaped") result = 1;
+
+      match.perks.forEach((perk) => {
+        if (perk) {
+          if (dataMap.has(perk.id)) {
+            dataMap.set(perk.id, dataMap.get(perk.id) + result);
+          } else {
+            dataMap.set(perk.id, result);
+          }
+        }
+      });
+    }
+  });
+
+  return [...dataMap]
+    .map((item) => {
+      return {
+        name: item[0],
+        count:
+          item[1] /
+          matches.filter((match) =>
+            match.perks.some((perk) => perk !== null && perk.id === item[0])
+          ).length,
+      };
+    })
+    .sort((a, b) => b.count - a.count);
+};
+
 const SurvivorCharts = ({ matches, chartType }) => {
   const [data, setData] = useState([]);
 
@@ -36,7 +102,12 @@ const SurvivorCharts = ({ matches, chartType }) => {
       case "general":
         setData(getGeneralData(matches));
         break;
-
+      case "average":
+        setData(getAverageSurvivorData(matches));
+        break;
+      case "averagePerk":
+        setData(getAveragePerkData(matches));
+        break;
       default:
         setData(getGeneralData(matches));
         break;

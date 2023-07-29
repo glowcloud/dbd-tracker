@@ -1,14 +1,21 @@
 import { AppBar, Toolbar, Box, Typography } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/other/bloodpointsIcon.png";
+import { useAuth } from "../hooks/useAuth";
 
-const navItems = [
+const userNavItems = [
   { title: "Home", route: "/" },
   { title: "Matches", route: "/matches" },
   { title: "Add Match", route: "/add-match" },
 ];
 
+const guestNavItems = [
+  { title: "Home", route: "/" },
+  { title: "Login", route: "/login" },
+];
+
 const Navbar = () => {
+  const { session, handleSignOut } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -27,12 +34,50 @@ const Navbar = () => {
           <Typography variant="h6">Dead by Daylight Tracker</Typography>
         </Box>
 
-        {navItems.map((item) => (
+        {session
+          ? userNavItems.map((item) => (
+              <Box
+                component={Link}
+                key={item.title}
+                to={item.route}
+                sx={{
+                  textDecoration: "none",
+                  mx: 2,
+                  "&:visited": {
+                    color: "inherit",
+                  },
+                  "&:hover": {
+                    color: "primary.dark",
+                  },
+                }}
+              >
+                {item.title}
+              </Box>
+            ))
+          : guestNavItems.map((item) => (
+              <Box
+                component={Link}
+                key={item.title}
+                to={item.route}
+                sx={{
+                  textDecoration: "none",
+                  mx: 2,
+                  "&:visited": {
+                    color: "inherit",
+                  },
+                  "&:hover": {
+                    color: "primary.dark",
+                  },
+                }}
+              >
+                {item.title}
+              </Box>
+            ))}
+        {session && (
           <Box
             component={Link}
-            key={item.title}
-            to={item.route}
-            reloadDocument
+            to={"/"}
+            onClick={handleSignOut}
             sx={{
               textDecoration: "none",
               mx: 2,
@@ -44,9 +89,9 @@ const Navbar = () => {
               },
             }}
           >
-            {item.title}
+            Logout
           </Box>
-        ))}
+        )}
       </Toolbar>
     </AppBar>
   );

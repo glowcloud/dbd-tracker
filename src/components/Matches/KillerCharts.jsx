@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+// GENERAL KILL COUNT
 const getGeneralData = (matches) => {
   const dataMap = new Map([
     ["4 kills", 0],
@@ -30,6 +31,101 @@ const getGeneralData = (matches) => {
   });
 };
 
+// AVERAGE KILL COUNT BY KILLER
+const getAverageKillerData = (matches) => {
+  const dataMap = new Map();
+
+  matches.forEach((match) => {
+    if (match.result) {
+      let result = 0;
+      switch (match.result) {
+        case "1 kill":
+          result = 1;
+          break;
+        case "2 kills":
+          result = 2;
+          break;
+        case "3 kills":
+          result = 3;
+          break;
+        case "4 kills":
+          result = 4;
+          break;
+        default:
+          break;
+      }
+      if (dataMap.has(match.character.id)) {
+        dataMap.set(
+          match.character.id,
+          dataMap.get(match.character.id) + result
+        );
+      } else {
+        dataMap.set(match.character.id, result);
+      }
+    }
+  });
+
+  return [...dataMap]
+    .map((item) => {
+      return {
+        name: item[0],
+        count:
+          item[1] /
+          matches.filter((match) => match.character.id === item[0]).length,
+      };
+    })
+    .sort((a, b) => b.count - a.count);
+};
+
+// AVERAGE KILL COUNT BY PERK
+const getAveragePerkData = (matches) => {
+  const dataMap = new Map();
+
+  matches.forEach((match) => {
+    if (match.result) {
+      let result = 0;
+      switch (match.result) {
+        case "1 kill":
+          result = 1;
+          break;
+        case "2 kills":
+          result = 2;
+          break;
+        case "3 kills":
+          result = 3;
+          break;
+        case "4 kills":
+          result = 4;
+          break;
+        default:
+          break;
+      }
+      match.perks.forEach((perk) => {
+        if (perk) {
+          if (dataMap.has(perk.id)) {
+            dataMap.set(perk.id, dataMap.get(perk.id) + result);
+          } else {
+            dataMap.set(perk.id, result);
+          }
+        }
+      });
+    }
+  });
+
+  return [...dataMap]
+    .map((item) => {
+      return {
+        name: item[0],
+        count:
+          item[1] /
+          matches.filter((match) =>
+            match.perks.some((perk) => perk !== null && perk.id === item[0])
+          ).length,
+      };
+    })
+    .sort((a, b) => b.count - a.count);
+};
+
 const KillerCharts = ({ matches, chartType }) => {
   const [data, setData] = useState([]);
 
@@ -37,6 +133,14 @@ const KillerCharts = ({ matches, chartType }) => {
     switch (chartType) {
       case "general":
         setData(getGeneralData(matches));
+        break;
+
+      case "average":
+        setData(getAverageKillerData(matches));
+        break;
+
+      case "averagePerk":
+        setData(getAveragePerkData(matches));
         break;
 
       default:

@@ -5,8 +5,11 @@ import AddMatch from "./pages/AddMatch";
 import Matches from "./pages/Matches";
 import Layout from "./components/Layout";
 import Match from "./pages/Match";
+import Login from "./pages/Login";
+import { useAuth } from "./hooks/useAuth";
 
 function App() {
+  const { session } = useAuth();
   const theme = createTheme({
     palette: {
       mode: "dark",
@@ -20,9 +23,22 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/matches" element={<Matches />} />
-            <Route path="/matches/*" element={<Match />} />
-            <Route path="/add-match" element={<AddMatch />} />
+            <Route
+              path="/login"
+              element={!session ? <Login /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/matches"
+              element={session ? <Matches /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/matches/*"
+              element={session ? <Match /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/add-match"
+              element={session ? <AddMatch /> : <Navigate to="/login" />}
+            />
             <Route path="/*" element={<Navigate to="/" />} />
           </Routes>
         </Layout>
