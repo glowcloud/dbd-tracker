@@ -16,13 +16,9 @@ const Matches = () => {
 
   useEffect(() => {
     const getMatches = async () => {
-      // const res = await fetch("http://localhost:3000/matches");
-      // const data = await res.json();
-      // setMatches(data);
-      // setLoading(false);
       const { data } = await supabase.from("matches").select(
         `     id,
-              map: map_id (id, name, image, realm: realm_id (name)),
+              realmMap: map_id (id, name, image, realm: realm_id (name)),
               result,
               created_at, 
               killer: killer_id ( 
@@ -91,8 +87,155 @@ const Matches = () => {
               side
               `
       );
-      console.log(data);
-      setMatches(data);
+
+      const properMatches = [];
+      data.forEach((match) => {
+        if (match.side === "killer") {
+          const newMatch = {
+            id: match.id,
+            character: match.killer.character,
+            perks: [
+              match.killer.perk1,
+              match.killer.perk2,
+              match.killer.perk3,
+              match.killer.perk4,
+            ],
+            addons: [match.killer.addon1, match.killer.addon2],
+            offering: match.killer.offering,
+            realmMap: match.realmMap,
+            result: match.result,
+            side: match.side,
+            survivors: [
+              match.survivor1
+                ? {
+                    character: match.survivor1.character,
+                    perks: [
+                      match.survivor1.perk1,
+                      match.survivor1.perk2,
+                      match.survivor1.perk3,
+                      match.survivor1.perk4,
+                    ],
+                    item: match.item,
+                    addons: [match.survivor1.addon1, match.survivor1.addon2],
+                    escaped: match.survivor1.escaped,
+                  }
+                : null,
+
+              match.survivor2
+                ? {
+                    character: match.survivor2.character,
+                    perks: [
+                      match.survivor2.perk1,
+                      match.survivor2.perk2,
+                      match.survivor2.perk3,
+                      match.survivor2.perk4,
+                    ],
+                    item: match.item,
+                    addons: [match.survivor2.addon1, match.survivor2.addon2],
+                    escaped: match.survivor2.escaped,
+                  }
+                : null,
+              match.survivor3
+                ? {
+                    character: match.survivor3.character,
+                    perks: [
+                      match.survivor3.perk1,
+                      match.survivor3.perk2,
+                      match.survivor3.perk3,
+                      match.survivor3.perk4,
+                    ],
+                    item: match.item,
+                    addons: [match.survivor3.addon1, match.survivor3.addon2],
+                    escaped: match.survivor3.escaped,
+                  }
+                : null,
+              match.survivor4
+                ? {
+                    character: match.survivor4.character,
+                    perks: [
+                      match.survivor4.perk1,
+                      match.survivor4.perk2,
+                      match.survivor4.perk3,
+                      match.survivor4.perk4,
+                    ],
+                    item: match.item,
+                    addons: [match.survivor4.addon1, match.survivor4.addon2],
+                    escaped: match.survivor4.escaped,
+                  }
+                : null,
+            ],
+          };
+          properMatches.push(newMatch);
+        }
+        if (match.side === "survivor") {
+          const newMatch = {
+            id: match.id,
+            character: match.survivor1.character,
+            perks: [
+              match.survivor1.perk1,
+              match.survivor1.perk2,
+              match.survivor1.perk3,
+              match.survivor1.perk4,
+            ],
+            item: match.survivor1.item,
+            addons: [match.survivor1.addon1, match.survivor1.addon2],
+            offering: match.survivor1.offering,
+            escaped: match.survivor1.escaped,
+            realmMap: match.realmMap,
+            result: match.result,
+            side: match.side,
+            survivors: [
+              match.survivor2
+                ? {
+                    character: match.survivor2.character,
+                    perks: [
+                      match.survivor2.perk1,
+                      match.survivor2.perk2,
+                      match.survivor2.perk3,
+                      match.survivor2.perk4,
+                    ],
+                    item: match.item,
+                    addons: [match.survivor2.addon1, match.survivor2.addon2],
+                    escaped: match.survivor2.escaped,
+                  }
+                : null,
+
+              match.survivor3
+                ? {
+                    character: match.survivor3.character,
+                    perks: [
+                      match.survivor3.perk1,
+                      match.survivor3.perk2,
+                      match.survivor3.perk3,
+                      match.survivor3.perk4,
+                    ],
+                    item: match.item,
+                    addons: [match.survivor3.addon1, match.survivor3.addon2],
+                    escaped: match.survivor3.escaped,
+                  }
+                : null,
+
+              match.survivor4
+                ? {
+                    character: match.survivor4.character,
+                    perks: [
+                      match.survivor4.perk1,
+                      match.survivor4.perk2,
+                      match.survivor4.perk3,
+                      match.survivor4.perk4,
+                    ],
+                    item: match.item,
+                    addons: [match.survivor4.addon1, match.survivor4.addon2],
+                    escaped: match.survivor4.escaped,
+                  }
+                : null,
+            ],
+          };
+          properMatches.push(newMatch);
+        }
+      });
+
+      setMatches(properMatches);
       setLoading(false);
     };
 
@@ -143,15 +286,12 @@ const Matches = () => {
           {matches
             .filter((match) => match.side === side)
             .map((match, index) => (
-              <Box
-                key={index}
-                onClick={() => navigate(`/matches/${match.timestamp}`)}
-              >
+              <Box key={index} onClick={() => navigate(`/matches/${match.id}`)}>
                 <Box display="flex" alignItems="center" justifyContent="center">
                   <Box
                     component="img"
                     src={match.character.image}
-                    alt={`${match.character.id} Image`}
+                    alt={`${match.character.name} Image`}
                     sx={{
                       width: 150,
                       height: 150,
@@ -187,7 +327,11 @@ const Matches = () => {
                   ))}
                   <Divider orientation="vertical" flexItem />
                   <Typography variant="h5" px={5}>
-                    {side === "killer" ? match.result : match.status}
+                    {side === "killer"
+                      ? match.result
+                      : match.escaped
+                      ? "Escaped"
+                      : "Killed"}
                   </Typography>
                 </Box>
                 <Divider />

@@ -120,7 +120,7 @@ const AddMatch = () => {
           addons: matchData.addons,
           offering: matchData.offering,
         },
-        false,
+        true,
         session.user.id
       );
     }
@@ -150,8 +150,6 @@ const AddMatch = () => {
       const id = await handleAddSurvivor(survivor, false, session.user.id);
       survivorIds.push(id);
     }
-
-    console.log(killerId, survivorIds);
 
     const { error } = await supabase.from("matches").insert({
       killer_id: killerId,

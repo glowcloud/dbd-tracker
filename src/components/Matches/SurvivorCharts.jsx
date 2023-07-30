@@ -64,20 +64,18 @@ const getAveragePerkData = (matches) => {
   const dataMap = new Map();
 
   matches.forEach((match) => {
-    if (match.status) {
-      let result = 0;
-      if (match.status === "escaped") result = 1;
+    let result = 0;
+    if (match.escaped) result = 1;
 
-      match.perks.forEach((perk) => {
-        if (perk) {
-          if (dataMap.has(perk.id)) {
-            dataMap.set(perk.id, dataMap.get(perk.id) + result);
-          } else {
-            dataMap.set(perk.id, result);
-          }
+    match.perks.forEach((perk) => {
+      if (perk) {
+        if (dataMap.has(perk.name)) {
+          dataMap.set(perk.name, dataMap.get(perk.name) + result);
+        } else {
+          dataMap.set(perk.name, result);
         }
-      });
-    }
+      }
+    });
   });
 
   return [...dataMap]
@@ -87,7 +85,7 @@ const getAveragePerkData = (matches) => {
         count:
           item[1] /
           matches.filter((match) =>
-            match.perks.some((perk) => perk !== null && perk.id === item[0])
+            match.perks.some((perk) => perk !== null && perk.name === item[0])
           ).length,
       };
     })
