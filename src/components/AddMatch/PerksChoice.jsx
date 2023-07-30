@@ -86,7 +86,7 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
               <Box
                 component="img"
                 src={perk.image}
-                alt={`${perk.id} Image`}
+                alt={`${perk.name} Image`}
                 sx={{
                   width: 100,
                   height: 100,
@@ -151,7 +151,7 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
             px={25}
           >
             {perks
-              .filter((perk) => perk.id.toLowerCase().includes(search))
+              .filter((perk) => perk.name.toLowerCase().includes(search))
               .map((perk) => (
                 <Box
                   key={perk.id}

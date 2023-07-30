@@ -47,7 +47,7 @@ const AddMatch = () => {
     character: "",
     perks: [],
     offering: "",
-    map: null,
+    realmMap: null,
     result: "",
     survivors: [],
     sideData: {},
@@ -61,7 +61,7 @@ const AddMatch = () => {
       character: data.character,
       perks: data.perks,
       offering: data.offering,
-      map: data.map,
+      realmMap: data.realmMap,
       result: data.result,
       survivors: data.survivors,
       ...data.sideData,
@@ -99,17 +99,6 @@ const AddMatch = () => {
           data={data}
           setData={setData}
         />
-      )}
-
-      {/* SKIPPED: STEP 3 - ADDONS, STEP 4 - OFFERING, STEP 6 - MAP */}
-      {data.side === "killer" && (step === 3 || step === 4 || step === 6) && (
-        <Button
-          variant="outlined"
-          sx={{ my: 5, mx: 2 }}
-          onClick={() => setStep((prevStep) => prevStep + 1)}
-        >
-          Skip
-        </Button>
       )}
 
       {step === 3 && data.side === "killer" && (
@@ -172,18 +161,9 @@ const AddMatch = () => {
         />
       )}
 
-      {/* SKIPPED: STEP 3 - ADDONS + ITEMS, STEP 4 - OFFERING, STEP 8 - MAP */}
-      {data.side === "survivor" && (step === 3 || step === 4 || step === 8) && (
-        <Button
-          variant="outlined"
-          sx={{ my: 5, mx: 2 }}
-          onClick={() => setStep((prevStep) => prevStep + 1)}
-        >
-          Skip
-        </Button>
+      {step === 3 && data.side === "survivor" && (
+        <SurvivorItem setStep={setStep} setData={setData} data={data} />
       )}
-
-      {step === 3 && data.side === "survivor" && <SurvivorItem />}
 
       {step === 4 && data.side === "survivor" && (
         <OfferingChoice
