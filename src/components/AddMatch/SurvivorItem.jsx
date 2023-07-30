@@ -4,10 +4,12 @@ import { Box, Button, TextField, Divider } from "@mui/material";
 
 const SurvivorItem = ({ setStep, setData, data }) => {
   const [chosenItem, setChosenItem] = useState(
-    data?.item?.item ? data.item.item : null
+    data?.sideData.item?.item ? data.sideData.item.item : null
   );
   const [chosenAddons, setChosenAddons] = useState(
-    data?.item?.addons?.length > 0 ? data.item.addons : [null, null]
+    data?.sideData.item?.addons?.length > 0
+      ? data.sideData.item.addons
+      : [null, null]
   );
   const [itemChoosing, setItemChoosing] = useState(false);
   const [chosenSlot, setChosenSlot] = useState(-1);
@@ -186,7 +188,10 @@ const SurvivorItem = ({ setStep, setData, data }) => {
           setData((prevData) => {
             return {
               ...prevData,
-              item: { item: chosenItem, addons: chosenAddons },
+              sideData: {
+                ...prevData.sideData,
+                item: { item: chosenItem, addons: chosenAddons },
+              },
             };
           });
           setStep((prevStep) => prevStep + 1);
@@ -223,75 +228,77 @@ const SurvivorItem = ({ setStep, setData, data }) => {
             flexWrap="wrap"
             px={25}
           >
-            {itemChoosing
-              ? items
-                  .filter(
-                    (item) =>
-                      item.name.toLowerCase().includes(search) ||
-                      item.category.name.toLowerCase().includes(search)
-                  )
-                  .map((item) => (
+            {itemChoosing &&
+              items
+                .filter(
+                  (item) =>
+                    item.name.toLowerCase().includes(search) ||
+                    item.category.name.toLowerCase().includes(search)
+                )
+                .map((item) => (
+                  <Box
+                    key={item.id}
+                    sx={{
+                      m: 5,
+                      width: 150,
+                      height: 150,
+                      border: "1px solid white",
+                      "&:hover": {
+                        borderColor: "primary.dark",
+                      },
+                    }}
+                    onClick={() => {
+                      handleItemChoice(item);
+                    }}
+                  >
                     <Box
-                      key={item.id}
+                      component="img"
+                      src={item.image}
+                      alt={`${item.id} Image`}
                       sx={{
-                        m: 5,
                         width: 150,
                         height: 150,
-                        border: "1px solid white",
-                        "&:hover": {
-                          borderColor: "primary.dark",
-                        },
+                        objectFit: "contain",
                       }}
-                      onClick={() => {
-                        handleItemChoice(item);
-                      }}
-                    >
-                      <Box
-                        component="img"
-                        src={item.image}
-                        alt={`${item.id} Image`}
-                        sx={{
-                          width: 150,
-                          height: 150,
-                          objectFit: "contain",
-                        }}
-                      />
-                    </Box>
-                  ))
-              : addons
-                  .filter(
-                    (addon) =>
-                      addon.category.id === chosenItem.category.id &&
-                      addon.name.toLowerCase().includes(search)
-                  )
-                  .map((addon) => (
+                    />
+                  </Box>
+                ))}
+            {chosenItem &&
+              chosenSlot >= 0 &&
+              addons
+                .filter(
+                  (addon) =>
+                    addon.category.id === chosenItem.category.id &&
+                    addon.name.toLowerCase().includes(search)
+                )
+                .map((addon) => (
+                  <Box
+                    key={addon.id}
+                    sx={{
+                      m: 5,
+                      width: 150,
+                      height: 150,
+                      border: "1px solid white",
+                      "&:hover": {
+                        borderColor: "primary.dark",
+                      },
+                    }}
+                    onClick={() => {
+                      handleAddonChoice(addon);
+                    }}
+                  >
                     <Box
-                      key={addon.id}
+                      component="img"
+                      src={addon.image}
+                      alt={`${addon.id} Image`}
                       sx={{
-                        m: 5,
                         width: 150,
                         height: 150,
-                        border: "1px solid white",
-                        "&:hover": {
-                          borderColor: "primary.dark",
-                        },
+                        objectFit: "contain",
                       }}
-                      onClick={() => {
-                        handleAddonChoice(addon);
-                      }}
-                    >
-                      <Box
-                        component="img"
-                        src={addon.image}
-                        alt={`${addon.id} Image`}
-                        sx={{
-                          width: 150,
-                          height: 150,
-                          objectFit: "contain",
-                        }}
-                      />
-                    </Box>
-                  ))}
+                    />
+                  </Box>
+                ))}
           </Box>
         </Box>
       )}

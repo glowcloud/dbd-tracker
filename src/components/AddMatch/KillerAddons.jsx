@@ -124,7 +124,10 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
           sx={{ my: 5, mx: 2 }}
           onClick={() => {
             setData((prevData) => {
-              return { ...prevData, addons: chosenAddons };
+              return {
+                ...prevData,
+                sideData: { ...prevData.sideData, addons: chosenAddons },
+              };
             });
             setStep((prevStep) => prevStep + 1);
           }}

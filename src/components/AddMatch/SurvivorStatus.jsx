@@ -31,7 +31,7 @@ const SurvivorStatus = ({ setData, setStep }) => {
           setData((prevData) => {
             return {
               ...prevData,
-              sideData: { status: status },
+              sideData: { ...prevData.sideData, status: status },
             };
           });
           setStep((prevStep) => prevStep + 1);

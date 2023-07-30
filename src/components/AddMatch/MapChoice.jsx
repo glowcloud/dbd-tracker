@@ -78,7 +78,7 @@ const MapChoice = ({ setStep, setData, data }) => {
         sx={{ my: 5, mx: 2 }}
         onClick={() => {
           setData((prevData) => {
-            return { ...prevData, map: chosenMap };
+            return { ...prevData, realmMap: chosenMap };
           });
           setStep((prevStep) => prevStep + 1);
         }}

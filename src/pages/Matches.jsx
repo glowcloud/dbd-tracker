@@ -1,11 +1,12 @@
 import { Box, Typography, Divider } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import survivorIcon from "../assets/other/survivorIcon.png";
 import killerIcon from "../assets/other/killerIcon.png";
-import { useNavigate } from "react-router-dom";
 import KillerCharts from "../components/Matches/KillerCharts";
 import SurvivorCharts from "../components/Matches/SurvivorCharts";
+import { supabase } from "../data/supabaseClient";
 
 const Matches = () => {
   const [loading, setLoading] = useState(true);
@@ -15,8 +16,82 @@ const Matches = () => {
 
   useEffect(() => {
     const getMatches = async () => {
-      const res = await fetch("http://localhost:3000/matches");
-      const data = await res.json();
+      // const res = await fetch("http://localhost:3000/matches");
+      // const data = await res.json();
+      // setMatches(data);
+      // setLoading(false);
+      const { data } = await supabase.from("matches").select(
+        `     id,
+              map: map_id (id, name, image, realm: realm_id (name)),
+              result,
+              created_at, 
+              killer: killer_id ( 
+                  character: killer_id (id, name, image), 
+                  addon1: addon_1_id (id, name, image), 
+                  addon2: addon_2_id (id, name, image), 
+                  offering: offering_id (id, name, image), 
+                  perk1: perk_1_id (id, name, image), 
+                  perk2: perk_2_id (id, name, image), 
+                  perk3: perk_3_id (id, name, image), 
+                  perk4: perk_4_id (id, name, image), 
+                  player
+              ), 
+              survivor1: survivor_1_id ( 
+                  character: survivor_id (id, name, image), 
+                  item: item_id (id, name, image), 
+                  addon1: addon_1_id (id, name, image), 
+                  addon2: addon_2_id (id, name, image), 
+                  offering: offering_id (id, name, image), 
+                  perk1: perk_1_id (id, name, image), 
+                  perk2: perk_2_id (id, name, image), 
+                  perk3: perk_3_id (id, name, image), 
+                  perk4: perk_4_id (id, name, image), 
+                  player, 
+                  escaped
+              ), 
+              survivor2: survivor_2_id ( 
+                  character: survivor_id (id, name, image), 
+                  item: item_id (id, name, image), 
+                  addon1: addon_1_id (id, name, image), 
+                  addon2: addon_2_id (id, name, image), 
+                  offering: offering_id (id, name, image), 
+                  perk1: perk_1_id (id, name, image), 
+                  perk2: perk_2_id (id, name, image), 
+                  perk3: perk_3_id (id, name, image), 
+                  perk4: perk_4_id (id, name, image), 
+                  player, 
+                  escaped
+              ), 
+              survivor3: survivor_3_id ( 
+                  character: survivor_id (id, name, image), 
+                  item: item_id (id, name, image), 
+                  addon1: addon_1_id (id, name, image), 
+                  addon2: addon_2_id (id, name, image), 
+                  offering: offering_id (id, name, image), 
+                  perk1: perk_1_id (id, name, image), 
+                  perk2: perk_2_id (id, name, image), 
+                  perk3: perk_3_id (id, name, image), 
+                  perk4: perk_4_id (id, name, image), 
+                  player, 
+                  escaped
+              ), 
+              survivor4: survivor_4_id ( 
+                  character: survivor_id (id, name, image), 
+                  item: item_id (id, name, image), 
+                  addon1: addon_1_id (id, name, image), 
+                  addon2: addon_2_id (id, name, image), 
+                  offering: offering_id (id, name, image), 
+                  perk1: perk_1_id (id, name, image), 
+                  perk2: perk_2_id (id, name, image), 
+                  perk3: perk_3_id (id, name, image), 
+                  perk4: perk_4_id (id, name, image), 
+                  player, 
+                  escaped
+              ), 
+              side
+              `
+      );
+      console.log(data);
       setMatches(data);
       setLoading(false);
     };

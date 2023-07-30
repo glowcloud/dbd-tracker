@@ -10,6 +10,9 @@ import {
 } from "@mui/material";
 import CharacterChoice from "./CharacterChoice";
 import PerksChoice from "./PerksChoice";
+import KillerAddons from "./KillerAddons";
+import SurvivorItem from "./SurvivorItem";
+import OfferingChoice from "./OfferingChoice";
 
 const AddCharacter = ({
   open,
@@ -17,22 +20,72 @@ const AddCharacter = ({
   characterType,
   handleAddCharacter,
 }) => {
-  const [character, setCharacter] = useState({
-    character: {},
-    perks: [],
-    status: "",
-  });
+  const [character, setCharacter] = useState(
+    characterType === "killer"
+      ? {
+          character: null,
+          perks: [],
+          offering: null,
+          sideData: {},
+        }
+      : {
+          character: null,
+          perks: [],
+          offering: null,
+          sideData: {},
+          status: "",
+        }
+  );
   const [step, setStep] = useState(0);
 
   const handleAdd = () => {
     handleAddCharacter(character);
     setStep(0);
-    setCharacter({});
+    setCharacter(
+      characterType === "killer"
+        ? {
+            character: null,
+            perks: [],
+            addons: [],
+            offering: null,
+            status: "",
+          }
+        : {
+            character: null,
+            perks: [],
+            item: null,
+            offering: null,
+            status: "",
+          }
+    );
     handleClose();
   };
 
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal
+      open={open}
+      onClose={() => {
+        setStep(0);
+        setCharacter(
+          characterType === "killer"
+            ? {
+                character: null,
+                perks: [],
+                addons: [],
+                offering: null,
+                status: "",
+              }
+            : {
+                character: null,
+                perks: [],
+                item: null,
+                offering: null,
+                status: "",
+              }
+        );
+        handleClose();
+      }}
+    >
       <Box
         sx={{
           position: "absolute",
@@ -48,6 +101,7 @@ const AddCharacter = ({
           height: "90%",
         }}
       >
+        {/* CHARACTER */}
         {step === 0 && (
           <CharacterChoice
             side={`${characterType}s`}
@@ -55,6 +109,8 @@ const AddCharacter = ({
             setData={setCharacter}
           />
         )}
+
+        {/* PERKS */}
         {step === 1 && (
           <PerksChoice
             side={characterType}
@@ -63,7 +119,38 @@ const AddCharacter = ({
             setData={setCharacter}
           />
         )}
-        {step === 2 && (
+
+        {/* KILLER: ADDONS */}
+        {step === 2 && characterType === "killer" && (
+          <KillerAddons
+            killer={character.character}
+            setStep={setStep}
+            data={character}
+            setData={setCharacter}
+          />
+        )}
+
+        {/* SURVIVOR: ITEM */}
+        {step === 2 && characterType === "survivor" && (
+          <SurvivorItem
+            setStep={setStep}
+            data={character}
+            setData={setCharacter}
+          />
+        )}
+
+        {/* OFFERING */}
+        {step === 3 && (
+          <OfferingChoice
+            side={characterType}
+            setStep={setStep}
+            data={character}
+            setData={setCharacter}
+          />
+        )}
+
+        {/* SUMMARY AND STATUS */}
+        {step === 4 && (
           <Box>
             <Box mx={5} display="flex">
               <Box
@@ -112,6 +199,7 @@ const AddCharacter = ({
               ))}
             </Box>
 
+            {/* STATUS - SURVIVORS */}
             {characterType === "survivor" && (
               <Box my={10} px={40}>
                 <FormControl fullWidth>
@@ -136,7 +224,23 @@ const AddCharacter = ({
             <Box textAlign="center">
               <Button
                 onClick={() => {
-                  setCharacter({});
+                  setCharacter(
+                    characterType === "killer"
+                      ? {
+                          character: null,
+                          perks: [],
+                          addons: [],
+                          offering: null,
+                          status: "",
+                        }
+                      : {
+                          character: null,
+                          perks: [],
+                          item: null,
+                          offering: null,
+                          status: "",
+                        }
+                  );
                   setStep(0);
                 }}
               >

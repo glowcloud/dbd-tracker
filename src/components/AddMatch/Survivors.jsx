@@ -23,7 +23,7 @@ const Survivors = ({ side, setStep, setData, data }) => {
   const handleAddCharacter = (character) => {
     setChosenCharacters((prevCharacters) => {
       const temp = [...prevCharacters];
-      temp[characterIndex] = character;
+      temp[characterIndex] = { ...character, ...character.sideData };
       return temp;
     });
   };

@@ -13,7 +13,7 @@ const Killer = ({ setStep, setData, data }) => {
   };
 
   const handleAddCharacter = (character) => {
-    setKiller(character);
+    setKiller({ ...character, ...character.sideData });
   };
 
   return (
