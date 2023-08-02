@@ -358,9 +358,9 @@ const Matches = () => {
               ))}
             </Box>
           )}
-          
+
           {/* PAGINATION */}
-          {side && (
+          {side && matches.length > 0 && (
             <CustomPagination
               itemsCount={matches.length}
               itemsPerPage={10}
