@@ -6,6 +6,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Button,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -24,12 +25,15 @@ const Matches = () => {
   const [side, setSide] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [characterChoice, setCharacterChoice] = useState("all");
+  const [showStats, setShowStats] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const getMatches = async () => {
-      const { data } = await supabase.from("matches").select(
-        `     id,
+      const { data } = await supabase
+        .from("matches")
+        .select(
+          `     id,
               realmMap: map_id (id, name, image, realm: realm_id (name)),
               result,
               created_at, 
@@ -98,7 +102,8 @@ const Matches = () => {
               ), 
               side
               `
-      );
+        )
+        .order("created_at", { ascending: false });
 
       const properMatches = [];
       data.forEach((match) => {
@@ -302,18 +307,31 @@ const Matches = () => {
 
       {!loading && side && (
         <Box>
+          <Button
+            variant="outlined"
+            sx={{
+              my: 2,
+            }}
+            onClick={() => {
+              setShowStats((prevShow) => !prevShow);
+            }}
+          >
+            {showStats ? "Hide statistics" : "Show statistics"}
+          </Button>
+
           {/* CHARTS */}
-          {side === "killer" && (
+          {showStats && side === "killer" && (
             <KillerCharts
               matches={matches.filter((match) => match.side === side)}
               chartType="averagePerk"
             />
           )}
-          {side === "survivor" && (
+          {showStats && side === "survivor" && (
             <SurvivorCharts
               matches={matches.filter((match) => match.side === side)}
             />
           )}
+          {showStats && <Divider />}
 
           {/* MATCH PREVIEWS */}
           {matches?.length > 0 && (
@@ -353,7 +371,7 @@ const Matches = () => {
                     (characterChoice === "all" ||
                       match.character.id == characterChoice)
                 ),
-                10,
+                5,
                 currentPage
               ).map((match, index) => (
                 <Box
