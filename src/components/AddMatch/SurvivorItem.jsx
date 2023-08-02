@@ -6,10 +6,10 @@ import CustomPagination from "../CustomPagination";
 
 const SurvivorItem = ({ setStep, setData, data }) => {
   const [chosenItem, setChosenItem] = useState(
-    data?.sideData.item?.item ? data.sideData.item.item : null
+    data?.sideData?.item?.item ? data.sideData.item.item : null
   );
   const [chosenAddons, setChosenAddons] = useState(
-    data?.sideData.item?.addons?.length > 0
+    data?.sideData?.item?.addons?.length > 0
       ? data.sideData.item.addons
       : [null, null]
   );

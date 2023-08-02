@@ -32,7 +32,7 @@ const getGeneralData = (matches) => {
   });
 };
 
-// AVERAGE KILL COUNT BY KILLER
+// AVERAGE KILL RATE BY KILLER
 const getAverageKillerData = (matches) => {
   const dataMap = new Map();
 
@@ -78,7 +78,7 @@ const getAverageKillerData = (matches) => {
     .sort((a, b) => b.count - a.count);
 };
 
-// AVERAGE KILL COUNT BY PERK
+// AVERAGE KILL RATE BY PERK
 const getAveragePerkData = (matches) => {
   const dataMap = new Map();
 
@@ -127,6 +127,65 @@ const getAveragePerkData = (matches) => {
     .sort((a, b) => b.count - a.count);
 };
 
+// SURVIVORS COUNT
+const getSurvivorsCount = (matches) => {
+  const dataMap = new Map();
+
+  matches.forEach((match) => {
+    match.survivors.forEach((survivor) => {
+      if (survivor) {
+        if (dataMap.has(survivor.character.name)) {
+          dataMap.set(
+            survivor.character.name,
+            dataMap.get(survivor.character.name) + 1
+          );
+        } else {
+          dataMap.set(survivor.character.name, 1);
+        }
+      }
+    });
+  });
+
+  return [...dataMap]
+    .map((item) => {
+      return {
+        name: item[0],
+        count: item[1],
+      };
+    })
+    .sort((a, b) => b.count - a.count);
+};
+
+// SURVIVOR PERKS COUNT
+const getSurvivorPerksCount = (matches) => {
+  const dataMap = new Map();
+
+  matches.forEach((match) => {
+    match.survivors.forEach((survivor) => {
+      if (survivor) {
+        survivor.perks.forEach((perk) => {
+          if (perk) {
+            if (dataMap.has(perk.name)) {
+              dataMap.set(perk.name, dataMap.get(perk.name) + 1);
+            } else {
+              dataMap.set(perk.name, 1);
+            }
+          }
+        });
+      }
+    });
+  });
+
+  return [...dataMap]
+    .map((item) => {
+      return {
+        name: item[0],
+        count: item[1],
+      };
+    })
+    .sort((a, b) => b.count - a.count);
+};
+
 const KillerCharts = ({ matches }) => {
   const [data, setData] = useState([]);
   const [chartType, setChartType] = useState("general");
@@ -143,6 +202,14 @@ const KillerCharts = ({ matches }) => {
 
       case "averagePerk":
         setData(getAveragePerkData(matches));
+        break;
+
+      case "survivorsCount":
+        setData(getSurvivorsCount(matches));
+        break;
+
+      case "survivorPerks":
+        setData(getSurvivorPerksCount(matches));
         break;
 
       default:
@@ -163,6 +230,8 @@ const KillerCharts = ({ matches }) => {
           <MenuItem value="general">Match results count</MenuItem>
           <MenuItem value="average">Average kill rate by killer</MenuItem>
           <MenuItem value="averagePerk">Average kill rate by perk</MenuItem>
+          <MenuItem value="survivorsCount">Survivors count</MenuItem>
+          <MenuItem value="survivorPerks">Survivor perks count</MenuItem>
         </Select>
       </FormControl>
       <ResponsiveContainer width="100%" height={500}>
@@ -172,16 +241,23 @@ const KillerCharts = ({ matches }) => {
           data={data}
           margin={{
             top: 5,
-            right: 30,
-            left: 20,
+            right: 100,
+            left: 100,
             bottom: 5,
           }}
+          layout={chartType === "general" ? "horizontal" : "vertical"}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
+          <XAxis
+            type={chartType === "general" ? "category" : "number"}
+            dataKey={chartType === "general" ? "name" : "count"}
+          />
+          <YAxis
+            type={chartType === "general" ? "number" : "category"}
+            dataKey={chartType === "general" ? "count" : "name"}
+          />
+          {/* <Tooltip />
+          <Legend /> */}
           <Bar dataKey="count" fill="#8884d8" />
         </BarChart>
       </ResponsiveContainer>
