@@ -18,6 +18,7 @@ import SurvivorCharts from "../components/Matches/SurvivorCharts";
 import { supabase } from "../data/supabaseClient";
 import { paginate } from "../utils/paginate";
 import CustomPagination from "../components/CustomPagination";
+import CharacterRow from "../components/Matches/CharacterRow";
 
 const Matches = () => {
   const [loading, setLoading] = useState(true);
@@ -335,7 +336,7 @@ const Matches = () => {
 
           {/* MATCH PREVIEWS */}
           {matches?.length > 0 && (
-            <Box py={3} px={25}>
+            <Box py={3}>
               {/* CHOOSE CHARACTER */}
 
               <FormControl sx={{ width: 300, my: 2 }}>
@@ -376,60 +377,15 @@ const Matches = () => {
               ).map((match, index) => (
                 <Box
                   key={index}
+                  sx={{
+                    mx: 5,
+                    "&:hover": {
+                      cursor: "pointer",
+                    },
+                  }}
                   onClick={() => navigate(`/matches/${match.id}`)}
                 >
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <Box
-                      component="img"
-                      src={match.character.image}
-                      alt={`${match.character.name} Image`}
-                      sx={{
-                        width: 150,
-                        height: 150,
-                        objectFit: "contain",
-                      }}
-                    />
-                    <Divider orientation="vertical" flexItem />
-                    {match.perks.map((perk, perkIndex) => (
-                      <Box
-                        key={perkIndex}
-                        sx={{
-                          width: 75,
-                          height: 75,
-                          transform: "rotate(45deg)",
-                          border: "1px solid white",
-                          m: 5,
-                        }}
-                      >
-                        {perk && (
-                          <Box
-                            component="img"
-                            src={perk.image}
-                            alt={`${perk.id} Image`}
-                            sx={{
-                              width: 75,
-                              height: 75,
-                              objectFit: "contain",
-                              transform: "rotate(-45deg)",
-                            }}
-                          />
-                        )}
-                      </Box>
-                    ))}
-                    <Divider orientation="vertical" flexItem />
-                    <Typography variant="h5" px={5}>
-                      {side === "killer"
-                        ? match.result
-                        : match.escaped
-                        ? "Escaped"
-                        : "Killed"}
-                    </Typography>
-                  </Box>
-                  <Divider />
+                  <CharacterRow data={match} player={false} side={match.side} />
                 </Box>
               ))}
 

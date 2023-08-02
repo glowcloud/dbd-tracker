@@ -32,7 +32,7 @@ function App() {
               element={session ? <Matches /> : <Navigate to="/login" />}
             />
             <Route
-              path="/matches/*"
+              path="/matches/:id"
               element={session ? <Match /> : <Navigate to="/login" />}
             />
             <Route
