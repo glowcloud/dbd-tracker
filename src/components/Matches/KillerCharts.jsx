@@ -9,6 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
 // GENERAL KILL COUNT
 const getGeneralData = (matches) => {
@@ -54,13 +55,13 @@ const getAverageKillerData = (matches) => {
         default:
           break;
       }
-      if (dataMap.has(match.character.id)) {
+      if (dataMap.has(match.character.name)) {
         dataMap.set(
-          match.character.id,
-          dataMap.get(match.character.id) + result
+          match.character.name,
+          dataMap.get(match.character.name) + result
         );
       } else {
-        dataMap.set(match.character.id, result);
+        dataMap.set(match.character.name, result);
       }
     }
   });
@@ -71,7 +72,7 @@ const getAverageKillerData = (matches) => {
         name: item[0],
         count:
           item[1] /
-          matches.filter((match) => match.character.id === item[0]).length,
+          matches.filter((match) => match.character.name === item[0]).length,
       };
     })
     .sort((a, b) => b.count - a.count);
@@ -102,10 +103,10 @@ const getAveragePerkData = (matches) => {
       }
       match.perks.forEach((perk) => {
         if (perk) {
-          if (dataMap.has(perk.id)) {
-            dataMap.set(perk.id, dataMap.get(perk.id) + result);
+          if (dataMap.has(perk.name)) {
+            dataMap.set(perk.name, dataMap.get(perk.name) + result);
           } else {
-            dataMap.set(perk.id, result);
+            dataMap.set(perk.name, result);
           }
         }
       });
@@ -119,15 +120,16 @@ const getAveragePerkData = (matches) => {
         count:
           item[1] /
           matches.filter((match) =>
-            match.perks.some((perk) => perk !== null && perk.id === item[0])
+            match.perks.some((perk) => perk !== null && perk.name === item[0])
           ).length,
       };
     })
     .sort((a, b) => b.count - a.count);
 };
 
-const KillerCharts = ({ matches, chartType }) => {
+const KillerCharts = ({ matches }) => {
   const [data, setData] = useState([]);
+  const [chartType, setChartType] = useState("general");
 
   useEffect(() => {
     switch (chartType) {
@@ -150,26 +152,40 @@ const KillerCharts = ({ matches, chartType }) => {
   }, [matches, chartType]);
 
   return (
-    <ResponsiveContainer width="100%" height={500}>
-      <BarChart
-        width={500}
-        height={300}
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="count" fill="#8884d8" />
-      </BarChart>
-    </ResponsiveContainer>
+    <Box>
+      <FormControl sx={{ width: 300, my: 2 }}>
+        <InputLabel>Chart Choice</InputLabel>
+        <Select
+          value={chartType}
+          label="chart"
+          onChange={(e) => setChartType(e.target.value)}
+        >
+          <MenuItem value="general">Match results count</MenuItem>
+          <MenuItem value="average">Average kill rate by killer</MenuItem>
+          <MenuItem value="averagePerk">Average kill rate by perk</MenuItem>
+        </Select>
+      </FormControl>
+      <ResponsiveContainer width="100%" height={500}>
+        <BarChart
+          width={500}
+          height={300}
+          data={data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="count" fill="#8884d8" />
+        </BarChart>
+      </ResponsiveContainer>
+    </Box>
   );
 };
 

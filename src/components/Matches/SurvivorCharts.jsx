@@ -9,17 +9,19 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
 const getGeneralData = (matches) => {
   const dataMap = new Map([
     ["escaped", 0],
     ["killed", 0],
-    ["disconnected", 0],
   ]);
 
   matches.forEach((match) => {
-    if (match.status) {
-      dataMap.set(match.status, dataMap.get(match.status) + 1);
+    if (match.escaped) {
+      dataMap.set("escaped", dataMap.get("escaped") + 1);
+    } else {
+      dataMap.set("killed", dataMap.get("killed") + 1);
     }
   });
 
@@ -33,17 +35,15 @@ const getAverageSurvivorData = (matches) => {
   const dataMap = new Map();
 
   matches.forEach((match) => {
-    if (match.status) {
-      let result = 0;
-      if (match.status === "escaped") result = 1;
-      if (dataMap.has(match.character.id)) {
-        dataMap.set(
-          match.character.id,
-          dataMap.get(match.character.id) + result
-        );
-      } else {
-        dataMap.set(match.character.id, result);
-      }
+    let result = 0;
+    if (match.escaped) result = 1;
+    if (dataMap.has(match.character.name)) {
+      dataMap.set(
+        match.character.name,
+        dataMap.get(match.character.name) + result
+      );
+    } else {
+      dataMap.set(match.character.name, result);
     }
   });
 
@@ -53,7 +53,7 @@ const getAverageSurvivorData = (matches) => {
         name: item[0],
         count:
           item[1] /
-          matches.filter((match) => match.character.id === item[0]).length,
+          matches.filter((match) => match.character.name === item[0]).length,
       };
     })
     .sort((a, b) => b.count - a.count);
@@ -92,8 +92,9 @@ const getAveragePerkData = (matches) => {
     .sort((a, b) => b.count - a.count);
 };
 
-const SurvivorCharts = ({ matches, chartType }) => {
+const SurvivorCharts = ({ matches }) => {
   const [data, setData] = useState([]);
+  const [chartType, setChartType] = useState("general");
 
   useEffect(() => {
     switch (chartType) {
@@ -113,26 +114,40 @@ const SurvivorCharts = ({ matches, chartType }) => {
   }, [matches, chartType]);
 
   return (
-    <ResponsiveContainer width="100%" height={500}>
-      <BarChart
-        width={500}
-        height={300}
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="count" fill="#8884d8" />
-      </BarChart>
-    </ResponsiveContainer>
+    <Box>
+      <FormControl sx={{ width: 300, my: 2 }}>
+        <InputLabel>Chart Choice</InputLabel>
+        <Select
+          value={chartType}
+          label="chart"
+          onChange={(e) => setChartType(e.target.value)}
+        >
+          <MenuItem value="general">Escaped and killed count</MenuItem>
+          <MenuItem value="average">Average escape rate by survivor</MenuItem>
+          <MenuItem value="averagePerk">Average escape rate by perk</MenuItem>
+        </Select>
+      </FormControl>
+      <ResponsiveContainer width="100%" height={500}>
+        <BarChart
+          width={500}
+          height={300}
+          data={data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="count" fill="#8884d8" />
+        </BarChart>
+      </ResponsiveContainer>
+    </Box>
   );
 };
 

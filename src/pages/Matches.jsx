@@ -7,11 +7,14 @@ import killerIcon from "../assets/other/killerIcon.png";
 import KillerCharts from "../components/Matches/KillerCharts";
 import SurvivorCharts from "../components/Matches/SurvivorCharts";
 import { supabase } from "../data/supabaseClient";
+import { paginate } from "../utils/paginate";
+import CustomPagination from "../components/CustomPagination";
 
 const Matches = () => {
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState([]);
   const [side, setSide] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -244,7 +247,10 @@ const Matches = () => {
 
   return (
     <Box textAlign="center">
+      {/* LOADING */}
       {loading && <Typography>Loading...</Typography>}
+
+      {/* SIDE CHOICE */}
       {!loading && !side && (
         <Box display="flex" alignItems="center" justifyContent="center" my={10}>
           <Box
@@ -268,8 +274,10 @@ const Matches = () => {
           />
         </Box>
       )}
+
       {!loading && side && (
         <Box>
+          {/* CHARTS */}
           {side === "killer" && (
             <KillerCharts
               matches={matches.filter((match) => match.side === side)}
@@ -279,64 +287,87 @@ const Matches = () => {
           {side === "survivor" && (
             <SurvivorCharts
               matches={matches.filter((match) => match.side === side)}
-              chartType="averagePerk"
             />
           )}
 
-          {matches
-            .filter((match) => match.side === side)
-            .map((match, index) => (
-              <Box key={index} onClick={() => navigate(`/matches/${match.id}`)}>
-                <Box display="flex" alignItems="center" justifyContent="center">
+          {/* MATCH PREVIEWS */}
+          {matches?.length > 0 && (
+            <Box py={3} px={25}>
+              {paginate(
+                matches.filter((match) => match.side === side),
+                10,
+                currentPage
+              ).map((match, index) => (
+                <Box
+                  key={index}
+                  onClick={() => navigate(`/matches/${match.id}`)}
+                >
                   <Box
-                    component="img"
-                    src={match.character.image}
-                    alt={`${match.character.name} Image`}
-                    sx={{
-                      width: 150,
-                      height: 150,
-                      objectFit: "contain",
-                    }}
-                  />
-                  <Divider orientation="vertical" flexItem />
-                  {match.perks.map((perk, perkIndex) => (
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
                     <Box
-                      key={perkIndex}
+                      component="img"
+                      src={match.character.image}
+                      alt={`${match.character.name} Image`}
                       sx={{
-                        width: 75,
-                        height: 75,
-                        transform: "rotate(45deg)",
-                        border: "1px solid white",
-                        m: 5,
+                        width: 150,
+                        height: 150,
+                        objectFit: "contain",
                       }}
-                    >
-                      {perk && (
-                        <Box
-                          component="img"
-                          src={perk.image}
-                          alt={`${perk.id} Image`}
-                          sx={{
-                            width: 75,
-                            height: 75,
-                            objectFit: "contain",
-                            transform: "rotate(-45deg)",
-                          }}
-                        />
-                      )}
-                    </Box>
-                  ))}
-                  <Divider orientation="vertical" flexItem />
-                  <Typography variant="h5" px={5}>
-                    {side === "killer"
-                      ? match.result
-                      : match.escaped
-                      ? "Escaped"
-                      : "Killed"}
-                  </Typography>
+                    />
+                    <Divider orientation="vertical" flexItem />
+                    {match.perks.map((perk, perkIndex) => (
+                      <Box
+                        key={perkIndex}
+                        sx={{
+                          width: 75,
+                          height: 75,
+                          transform: "rotate(45deg)",
+                          border: "1px solid white",
+                          m: 5,
+                        }}
+                      >
+                        {perk && (
+                          <Box
+                            component="img"
+                            src={perk.image}
+                            alt={`${perk.id} Image`}
+                            sx={{
+                              width: 75,
+                              height: 75,
+                              objectFit: "contain",
+                              transform: "rotate(-45deg)",
+                            }}
+                          />
+                        )}
+                      </Box>
+                    ))}
+                    <Divider orientation="vertical" flexItem />
+                    <Typography variant="h5" px={5}>
+                      {side === "killer"
+                        ? match.result
+                        : match.escaped
+                        ? "Escaped"
+                        : "Killed"}
+                    </Typography>
+                  </Box>
+                  <Divider />
                 </Box>
-                <Divider />
-              </Box>
-            ))}
+              ))}
+            </Box>
+          )}
+          
+          {/* PAGINATION */}
+          {side && (
+            <CustomPagination
+              itemsCount={matches.length}
+              itemsPerPage={10}
+              page={currentPage}
+              setPage={setCurrentPage}
+            />
+          )}
         </Box>
       )}
     </Box>
