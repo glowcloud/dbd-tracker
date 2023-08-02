@@ -23,11 +23,22 @@ const CharacterChoice = ({ side, setStep, setData }) => {
       px={25}
     >
       {characters.map((character) => (
-        <Box key={character.id}>
+        <Box
+          key={character.id}
+          sx={{
+            width: 200,
+            height: 200,
+            border: "1px solid white",
+            m: 1,
+            "&:hover": {
+              borderColor: "primary.dark",
+            },
+          }}
+        >
           <Box
             component="img"
             src={character.image}
-            alt={`${character.id} Image`}
+            alt={`${character.name} Image`}
             sx={{
               width: 200,
               height: 200,

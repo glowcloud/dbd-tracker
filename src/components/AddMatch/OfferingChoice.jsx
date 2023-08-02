@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { Box, Button, TextField, Divider } from "@mui/material";
+import { paginate } from "../../utils/paginate";
+import CustomPagination from "../CustomPagination";
 
 const OfferingChoice = ({ side, setStep, setData, data }) => {
   const [chosenOffering, setChosenOffering] = useState(
@@ -9,6 +11,7 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
   const [offerings, setOfferings] = useState([]);
   const [choosing, setChoosing] = useState(false);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     const getOfferings = async () => {
@@ -59,6 +62,8 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
           }}
           onClick={() => {
             setChoosing((prevChoosing) => !prevChoosing);
+            setSearch("");
+            setPage(0);
           }}
         >
           {chosenOffering && (
@@ -106,7 +111,10 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
               fullWidth
               label="Search"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(0);
+              }}
             />
           </Box>
 
@@ -117,37 +125,52 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
             flexWrap="wrap"
             px={25}
           >
-            {offerings
-              .filter((offering) => offering.name.toLowerCase().includes(search))
-              .map((offering) => (
+            {paginate(
+              offerings.filter((offering) =>
+                offering.name.toLowerCase().includes(search)
+              ),
+              10,
+              page
+            ).map((offering) => (
+              <Box
+                key={offering.id}
+                sx={{
+                  m: 5,
+                  width: 100,
+                  height: 100,
+                  border: "1px solid white",
+                  "&:hover": {
+                    borderColor: "primary.dark",
+                  },
+                }}
+                onClick={() => {
+                  handleOfferingChoice(offering);
+                }}
+              >
                 <Box
-                  key={offering.id}
+                  component="img"
+                  src={offering.image}
+                  alt={`${offering.name} Image`}
                   sx={{
-                    m: 5,
                     width: 100,
                     height: 100,
-                    border: "1px solid white",
-                    "&:hover": {
-                      borderColor: "primary.dark",
-                    },
+                    objectFit: "contain",
                   }}
-                  onClick={() => {
-                    handleOfferingChoice(offering);
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={offering.image}
-                    alt={`${offering.id} Image`}
-                    sx={{
-                      width: 100,
-                      height: 100,
-                      objectFit: "contain",
-                    }}
-                  />
-                </Box>
-              ))}
+                />
+              </Box>
+            ))}
           </Box>
+
+          <CustomPagination
+            itemsCount={
+              offerings.filter((offering) =>
+                offering.name.toLowerCase().includes(search)
+              ).length
+            }
+            itemsPerPage={10}
+            page={page}
+            setPage={setPage}
+          />
         </Box>
       )}
     </Box>

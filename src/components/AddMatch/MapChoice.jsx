@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { Box, Button, TextField, Divider } from "@mui/material";
+import { paginate } from "../../utils/paginate";
+import CustomPagination from "../CustomPagination";
 
 const MapChoice = ({ setStep, setData, data }) => {
   const [chosenMap, setChosenMap] = useState(
@@ -9,6 +11,7 @@ const MapChoice = ({ setStep, setData, data }) => {
   const [maps, setMaps] = useState([]);
   const [choosing, setChoosing] = useState(false);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     const getMaps = async () => {
@@ -55,6 +58,8 @@ const MapChoice = ({ setStep, setData, data }) => {
             },
           }}
           onClick={() => {
+            setSearch("");
+            setPage(0);
             setChoosing((prevChoosing) => !prevChoosing);
           }}
         >
@@ -103,7 +108,10 @@ const MapChoice = ({ setStep, setData, data }) => {
               fullWidth
               label="Search"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(0);
+              }}
             />
           </Box>
 
@@ -114,41 +122,56 @@ const MapChoice = ({ setStep, setData, data }) => {
             flexWrap="wrap"
             px={25}
           >
-            {maps
-              .filter(
+            {paginate(
+              maps.filter(
                 (realmMap) =>
                   realmMap.name.toLowerCase().includes(search) ||
                   realmMap.realm.name.toLowerCase().includes(search)
-              )
-              .map((realmMap) => (
+              ),
+              6,
+              page
+            ).map((realmMap) => (
+              <Box
+                key={realmMap.id}
+                sx={{
+                  m: 5,
+                  width: 250,
+                  height: 200,
+                  border: "1px solid white",
+                  "&:hover": {
+                    borderColor: "primary.dark",
+                  },
+                }}
+                onClick={() => {
+                  handleMapChoice(realmMap);
+                }}
+              >
                 <Box
-                  key={realmMap.id}
+                  component="img"
+                  src={realmMap.image}
+                  alt={`${realmMap.id} Image`}
                   sx={{
-                    m: 5,
                     width: 250,
                     height: 200,
-                    border: "1px solid white",
-                    "&:hover": {
-                      borderColor: "primary.dark",
-                    },
+                    objectFit: "contain",
                   }}
-                  onClick={() => {
-                    handleMapChoice(realmMap);
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={realmMap.image}
-                    alt={`${realmMap.id} Image`}
-                    sx={{
-                      width: 250,
-                      height: 200,
-                      objectFit: "contain",
-                    }}
-                  />
-                </Box>
-              ))}
+                />
+              </Box>
+            ))}
           </Box>
+
+          <CustomPagination
+            itemsCount={
+              maps.filter(
+                (realmMap) =>
+                  realmMap.name.toLowerCase().includes(search) ||
+                  realmMap.realm.name.toLowerCase().includes(search)
+              ).length
+            }
+            itemsPerPage={10}
+            page={page}
+            setPage={setPage}
+          />
         </Box>
       )}
     </Box>

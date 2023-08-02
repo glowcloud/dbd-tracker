@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { Box, Button, TextField, Divider } from "@mui/material";
+import { paginate } from "../../utils/paginate";
+import CustomPagination from "../CustomPagination";
 
 const SurvivorItem = ({ setStep, setData, data }) => {
   const [chosenItem, setChosenItem] = useState(
@@ -16,6 +18,7 @@ const SurvivorItem = ({ setStep, setData, data }) => {
   const [items, setItems] = useState([]);
   const [addons, setAddons] = useState([]);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     const getItems = async () => {
@@ -58,6 +61,8 @@ const SurvivorItem = ({ setStep, setData, data }) => {
   };
 
   const handleSlotChoice = (index) => {
+    setPage(0);
+    setSearch("");
     if (chosenSlot !== index) {
       setItemChoosing(false);
       setChosenSlot(index);
@@ -119,6 +124,8 @@ const SurvivorItem = ({ setStep, setData, data }) => {
             },
           }}
           onClick={() => {
+            setPage(0);
+            setSearch("");
             setChosenSlot(-1);
             setItemChoosing((prevChoosing) => !prevChoosing);
           }}
@@ -202,8 +209,8 @@ const SurvivorItem = ({ setStep, setData, data }) => {
 
       <Divider />
 
-      {/* ITEMS */}
-      {(itemChoosing || chosenSlot >= 0) && (
+      {/* ITEMS AND ADDONS */}
+      {(itemChoosing || (chosenItem && chosenSlot >= 0)) && (
         <Box>
           {/* SEARCH BAR */}
           <Box
@@ -217,7 +224,10 @@ const SurvivorItem = ({ setStep, setData, data }) => {
               fullWidth
               label="Search"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(0);
+              }}
             />
           </Box>
 
@@ -229,77 +239,101 @@ const SurvivorItem = ({ setStep, setData, data }) => {
             px={25}
           >
             {itemChoosing &&
-              items
-                .filter(
+              paginate(
+                items.filter(
                   (item) =>
                     item.name.toLowerCase().includes(search) ||
                     item.category.name.toLowerCase().includes(search)
-                )
-                .map((item) => (
+                ),
+                10,
+                page
+              ).map((item) => (
+                <Box
+                  key={item.id}
+                  sx={{
+                    m: 5,
+                    width: 150,
+                    height: 150,
+                    border: "1px solid white",
+                    "&:hover": {
+                      borderColor: "primary.dark",
+                    },
+                  }}
+                  onClick={() => {
+                    handleItemChoice(item);
+                  }}
+                >
                   <Box
-                    key={item.id}
+                    component="img"
+                    src={item.image}
+                    alt={`${item.id} Image`}
                     sx={{
-                      m: 5,
                       width: 150,
                       height: 150,
-                      border: "1px solid white",
-                      "&:hover": {
-                        borderColor: "primary.dark",
-                      },
+                      objectFit: "contain",
                     }}
-                    onClick={() => {
-                      handleItemChoice(item);
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={item.image}
-                      alt={`${item.id} Image`}
-                      sx={{
-                        width: 150,
-                        height: 150,
-                        objectFit: "contain",
-                      }}
-                    />
-                  </Box>
-                ))}
+                  />
+                </Box>
+              ))}
+
             {chosenItem &&
               chosenSlot >= 0 &&
-              addons
-                .filter(
+              paginate(
+                addons.filter(
                   (addon) =>
                     addon.category.id === chosenItem.category.id &&
                     addon.name.toLowerCase().includes(search)
-                )
-                .map((addon) => (
+                ),
+                10,
+                page
+              ).map((addon) => (
+                <Box
+                  key={addon.id}
+                  sx={{
+                    m: 5,
+                    width: 150,
+                    height: 150,
+                    border: "1px solid white",
+                    "&:hover": {
+                      borderColor: "primary.dark",
+                    },
+                  }}
+                  onClick={() => {
+                    handleAddonChoice(addon);
+                  }}
+                >
                   <Box
-                    key={addon.id}
+                    component="img"
+                    src={addon.image}
+                    alt={`${addon.id} Image`}
                     sx={{
-                      m: 5,
                       width: 150,
                       height: 150,
-                      border: "1px solid white",
-                      "&:hover": {
-                        borderColor: "primary.dark",
-                      },
+                      objectFit: "contain",
                     }}
-                    onClick={() => {
-                      handleAddonChoice(addon);
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={addon.image}
-                      alt={`${addon.id} Image`}
-                      sx={{
-                        width: 150,
-                        height: 150,
-                        objectFit: "contain",
-                      }}
-                    />
-                  </Box>
-                ))}
+                  />
+                </Box>
+              ))}
           </Box>
+
+          <CustomPagination
+            itemsCount={
+              itemChoosing
+                ? items.filter(
+                    (item) =>
+                      item.name.toLowerCase().includes(search) ||
+                      item.category.name.toLowerCase().includes(search)
+                  ).length
+                : addons.filter(
+                    (addon) =>
+                      addon.category.id === chosenItem.category.id &&
+                      addon.name.toLowerCase().includes(search)
+                  ).length
+            }
+            itemsPerPage={10}
+            page={page}
+            setPage={setPage}
+          />
         </Box>
       )}
     </Box>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { Box, Button, Divider, TextField } from "@mui/material";
+import { paginate } from "../../utils/paginate";
+import CustomPagination from "../CustomPagination";
 
 const KillerAddons = ({ killer, setStep, setData, data }) => {
   const [chosenAddons, setChosenAddons] = useState(
@@ -9,6 +11,7 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
   const [chosenSlot, setChosenSlot] = useState(-1);
   const [addons, setAddons] = useState([]);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     const getAddons = async () => {
@@ -29,6 +32,8 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
   }, [killer]);
 
   const handleSlotChoice = (index) => {
+    setSearch("");
+    setPage(0);
     if (chosenSlot !== index) {
       setChosenSlot(index);
     } else {
@@ -153,7 +158,10 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
               fullWidth
               label="Search"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(0);
+              }}
             />
           </Box>
 
@@ -164,37 +172,52 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
             flexWrap="wrap"
             px={25}
           >
-            {addons
-              .filter((addon) => addon.name.toLowerCase().includes(search))
-              .map((addon) => (
+            {paginate(
+              addons.filter((addon) =>
+                addon.name.toLowerCase().includes(search)
+              ),
+              10,
+              page
+            ).map((addon) => (
+              <Box
+                key={addon.id}
+                sx={{
+                  m: 5,
+                  width: 100,
+                  height: 100,
+                  border: "1px solid white",
+                  "&:hover": {
+                    borderColor: "primary.dark",
+                  },
+                }}
+                onClick={() => {
+                  handleAddonChoice(addon);
+                }}
+              >
                 <Box
-                  key={addon.id}
+                  component="img"
+                  src={addon.image}
+                  alt={`${addon.id} Image`}
                   sx={{
-                    m: 5,
                     width: 100,
                     height: 100,
-                    border: "1px solid white",
-                    "&:hover": {
-                      borderColor: "primary.dark",
-                    },
+                    objectFit: "contain",
                   }}
-                  onClick={() => {
-                    handleAddonChoice(addon);
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={addon.image}
-                    alt={`${addon.id} Image`}
-                    sx={{
-                      width: 100,
-                      height: 100,
-                      objectFit: "contain",
-                    }}
-                  />
-                </Box>
-              ))}
+                />
+              </Box>
+            ))}
           </Box>
+
+          <CustomPagination
+            itemsCount={
+              addons.filter((addon) =>
+                addon.name.toLowerCase().includes(search)
+              ).length
+            }
+            itemsPerPage={10}
+            page={page}
+            setPage={setPage}
+          />
         </Box>
       )}
     </Box>

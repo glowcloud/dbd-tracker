@@ -1,6 +1,8 @@
 import { Box, Button, Divider, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { supabase } from "../../data/supabaseClient";
+import { paginate } from "../../utils/paginate";
+import CustomPagination from "../CustomPagination";
 
 const PerksChoice = ({ side, setStep, data, setData }) => {
   const [chosenPerks, setChosenPerks] = useState(
@@ -9,6 +11,7 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
   const [chosenSlot, setChosenSlot] = useState(-1);
   const [search, setSearch] = useState("");
   const [perks, setPerks] = useState([]);
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     const getPerks = async () => {
@@ -20,6 +23,8 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
   }, [side]);
 
   const handleSlotChoice = (index) => {
+    setPage(0);
+    setSearch("");
     if (chosenSlot !== index) {
       setChosenSlot(index);
     } else {
@@ -139,7 +144,10 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
               fullWidth
               label="Search"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(0);
+              }}
             />
           </Box>
 
@@ -150,39 +158,51 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
             flexWrap="wrap"
             px={25}
           >
-            {perks
-              .filter((perk) => perk.name.toLowerCase().includes(search))
-              .map((perk) => (
+            {paginate(
+              perks.filter((perk) => perk.name.toLowerCase().includes(search)),
+              10,
+              page
+            ).map((perk) => (
+              <Box
+                key={perk.id}
+                sx={{
+                  m: 5,
+                  width: 100,
+                  height: 100,
+                  border: "1px solid white",
+                  transform: "rotate(45deg)",
+                  "&:hover": {
+                    borderColor: "primary.dark",
+                  },
+                }}
+                onClick={() => {
+                  handlePerkChoice(perk);
+                }}
+              >
                 <Box
-                  key={perk.id}
+                  component="img"
+                  src={perk.image}
+                  alt={`${perk.id} Image`}
                   sx={{
-                    m: 5,
                     width: 100,
                     height: 100,
-                    border: "1px solid white",
-                    transform: "rotate(45deg)",
-                    "&:hover": {
-                      borderColor: "primary.dark",
-                    },
+                    objectFit: "contain",
+                    transform: "rotate(-45deg)",
                   }}
-                  onClick={() => {
-                    handlePerkChoice(perk);
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={perk.image}
-                    alt={`${perk.id} Image`}
-                    sx={{
-                      width: 100,
-                      height: 100,
-                      objectFit: "contain",
-                      transform: "rotate(-45deg)",
-                    }}
-                  />
-                </Box>
-              ))}
+                />
+              </Box>
+            ))}
           </Box>
+
+          <CustomPagination
+            itemsCount={
+              perks.filter((perk) => perk.name.toLowerCase().includes(search))
+                .length
+            }
+            itemsPerPage={10}
+            page={page}
+            setPage={setPage}
+          />
         </Box>
       )}
     </Box>
