@@ -2,6 +2,10 @@ import { Box, Button, Divider, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { paginate } from "../../utils/paginate";
+import {
+  handleSlotChoice,
+  handleMultiItemChoice,
+} from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
 
 const PerksChoice = ({ side, setStep, data, setData }) => {
@@ -21,44 +25,6 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
 
     getPerks();
   }, [side]);
-
-  const handleSlotChoice = (index) => {
-    setPage(0);
-    setSearch("");
-    if (chosenSlot !== index) {
-      setChosenSlot(index);
-    } else {
-      setChosenSlot(-1);
-    }
-  };
-
-  const handlePerkChoice = (perk) => {
-    if (chosenPerks.includes(perk)) {
-      if (chosenPerks[chosenSlot] && chosenPerks[chosenSlot].id === perk.id) {
-        setChosenPerks((prevChosen) => {
-          const temp = [...prevChosen];
-          temp[chosenSlot] = null;
-          return temp;
-        });
-      } else {
-        const indexOfPerk = chosenPerks.indexOf(perk);
-        setChosenPerks((prevChosen) => {
-          const temp = [...prevChosen];
-          temp[indexOfPerk] = temp[chosenSlot];
-          temp[chosenSlot] = perk;
-          return temp;
-        });
-      }
-    } else {
-      setChosenPerks((prevChosen) => {
-        const temp = [...prevChosen];
-        temp[chosenSlot] = perk;
-        return temp;
-      });
-    }
-
-    setChosenSlot(-1);
-  };
 
   return (
     <Box>
@@ -84,7 +50,13 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
               },
             }}
             onClick={() => {
-              handleSlotChoice(index);
+              handleSlotChoice(
+                index,
+                chosenSlot,
+                setChosenSlot,
+                setSearch,
+                setPage
+              );
             }}
           >
             {perk && (
@@ -176,7 +148,13 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
                   },
                 }}
                 onClick={() => {
-                  handlePerkChoice(perk);
+                  handleMultiItemChoice(
+                    perk,
+                    chosenSlot,
+                    setChosenSlot,
+                    chosenPerks,
+                    setChosenPerks
+                  );
                 }}
               >
                 <Box

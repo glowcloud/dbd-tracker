@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { Box, Button, TextField, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
+import { handleSingleItemChoice } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
 
 const MapChoice = ({ setStep, setData, data }) => {
@@ -27,16 +28,6 @@ const MapChoice = ({ setStep, setData, data }) => {
 
     getMaps();
   }, []);
-
-  const handleMapChoice = (mapChoice) => {
-    if (chosenMap?.id === mapChoice.id) {
-      setChosenMap(null);
-    } else {
-      setChosenMap(mapChoice);
-    }
-
-    setChoosing(false);
-  };
 
   return (
     <Box>
@@ -143,7 +134,12 @@ const MapChoice = ({ setStep, setData, data }) => {
                   },
                 }}
                 onClick={() => {
-                  handleMapChoice(realmMap);
+                  handleSingleItemChoice(
+                    realmMap,
+                    chosenMap,
+                    setChosenMap,
+                    setChoosing
+                  );
                 }}
               >
                 <Box

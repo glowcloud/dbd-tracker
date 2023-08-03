@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { Box, Button, TextField, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
+import { handleSingleItemChoice } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
 
 const OfferingChoice = ({ side, setStep, setData, data }) => {
@@ -30,16 +31,6 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
 
     getOfferings();
   }, [side]);
-
-  const handleOfferingChoice = (offering) => {
-    if (chosenOffering?.id === offering.id) {
-      setChosenOffering(null);
-    } else {
-      setChosenOffering(offering);
-    }
-
-    setChoosing(false);
-  };
 
   return (
     <Box>
@@ -144,7 +135,12 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
                   },
                 }}
                 onClick={() => {
-                  handleOfferingChoice(offering);
+                  handleSingleItemChoice(
+                    offering,
+                    chosenOffering,
+                    setChosenOffering,
+                    setChoosing
+                  );
                 }}
               >
                 <Box

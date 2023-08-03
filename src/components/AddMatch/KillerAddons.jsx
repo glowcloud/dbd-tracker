@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { Box, Button, Divider, TextField } from "@mui/material";
 import { paginate } from "../../utils/paginate";
+import {
+  handleSlotChoice,
+  handleMultiItemChoice,
+} from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
 
 const KillerAddons = ({ killer, setStep, setData, data }) => {
   const [chosenAddons, setChosenAddons] = useState(
-    data?.addons?.length > 0 ? data.addons : [null, null]
+    data?.sideData?.addons?.length > 0 ? data.sideData.addons : [null, null]
   );
   const [chosenSlot, setChosenSlot] = useState(-1);
   const [addons, setAddons] = useState([]);
@@ -30,47 +34,6 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
 
     getAddons();
   }, [killer]);
-
-  const handleSlotChoice = (index) => {
-    setSearch("");
-    setPage(0);
-    if (chosenSlot !== index) {
-      setChosenSlot(index);
-    } else {
-      setChosenSlot(-1);
-    }
-  };
-
-  const handleAddonChoice = (addon) => {
-    if (chosenAddons.includes(addon)) {
-      if (
-        chosenAddons[chosenSlot] &&
-        chosenAddons[chosenSlot].id === addon.id
-      ) {
-        setChosenAddons((prevChosen) => {
-          const temp = [...prevChosen];
-          temp[chosenSlot] = null;
-          return temp;
-        });
-      } else {
-        const indexOfAddon = chosenAddons.indexOf(addon);
-        setChosenAddons((prevChosen) => {
-          const temp = [...prevChosen];
-          temp[indexOfAddon] = temp[chosenSlot];
-          temp[chosenSlot] = addon;
-          return temp;
-        });
-      }
-    } else {
-      setChosenAddons((prevChosen) => {
-        const temp = [...prevChosen];
-        temp[chosenSlot] = addon;
-        return temp;
-      });
-    }
-
-    setChosenSlot(-1);
-  };
 
   return (
     <Box>
@@ -96,7 +59,13 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
               },
             }}
             onClick={() => {
-              handleSlotChoice(index);
+              handleSlotChoice(
+                index,
+                chosenSlot,
+                setChosenSlot,
+                setSearch,
+                setPage
+              );
             }}
           >
             {addon && (
@@ -120,7 +89,7 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
         <Button
           variant="outlined"
           sx={{ my: 5, mx: 2 }}
-          onClick={() => setChosenAddons([null, null, null, null])}
+          onClick={() => setChosenAddons([null, null])}
         >
           Reset Addons
         </Button>
@@ -191,7 +160,13 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
                   },
                 }}
                 onClick={() => {
-                  handleAddonChoice(addon);
+                  handleMultiItemChoice(
+                    addon,
+                    chosenSlot,
+                    setChosenSlot,
+                    chosenAddons,
+                    setChosenAddons
+                  );
                 }}
               >
                 <Box
