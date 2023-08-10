@@ -256,6 +256,27 @@ const getSurvivorPerksCount = (matches) => {
     .sort((a, b) => b.count - a.count);
 };
 
+// MAPS COUNT
+const getMapsData = (matches) => {
+  const dataMap = new Map();
+
+  matches.forEach((match) => {
+    if (match.realmMap) {
+      if (dataMap.has(match.realmMap.name)) {
+        dataMap.set(match.realmMap.name, dataMap.get(match.realmMap.name) + 1);
+      } else {
+        dataMap.set(match.realmMap.name, 1);
+      }
+    }
+  });
+
+  return [...dataMap]
+    .map((item) => {
+      return { name: item[0], count: item[1] };
+    })
+    .sort((a, b) => b.count - a.count);
+};
+
 const SurvivorCharts = ({ matches }) => {
   const [data, setData] = useState([]);
   const [chartType, setChartType] = useState("general");
@@ -286,6 +307,9 @@ const SurvivorCharts = ({ matches }) => {
       case "survivorPerksCount":
         setData(getSurvivorPerksCount(matches));
         break;
+      case "mapsCount":
+        setData(getMapsData(matches));
+        break;
       default:
         setData(getGeneralData(matches));
         break;
@@ -311,6 +335,7 @@ const SurvivorCharts = ({ matches }) => {
           </MenuItem>
           <MenuItem value="killerPerksCount">Killer perks count</MenuItem>
           <MenuItem value="survivorPerksCount">Survivor perks count</MenuItem>
+          <MenuItem value="mapsCount">Maps count</MenuItem>
         </Select>
       </FormControl>
       <ResponsiveContainer width="100%" height={500 + data.length * 30}>
