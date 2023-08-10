@@ -7,6 +7,7 @@ import {
   handleMultiItemChoice,
 } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
+import ImageSlot from "../ImageSlot";
 
 const KillerAddons = ({ killer, setStep, setData, data }) => {
   const [chosenAddons, setChosenAddons] = useState(
@@ -46,9 +47,10 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
         py={10}
       >
         {chosenAddons.map((addon, index) => (
-          <Box
+          <ImageSlot
             key={index}
-            sx={{
+            data={addon}
+            containerSx={{
               mx: 5,
               width: 150,
               height: 150,
@@ -58,7 +60,12 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
                 borderColor: "primary.dark",
               },
             }}
-            onClick={() => {
+            imageSx={{
+              width: 150,
+              height: 150,
+              objectFit: "contain",
+            }}
+            handleClick={() => {
               handleSlotChoice(
                 index,
                 chosenSlot,
@@ -67,20 +74,7 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
                 setPage
               );
             }}
-          >
-            {addon && (
-              <Box
-                component="img"
-                src={addon.image}
-                alt={`${addon.name} Image`}
-                sx={{
-                  width: 150,
-                  height: 150,
-                  objectFit: "contain",
-                }}
-              />
-            )}
-          </Box>
+          />
         ))}
       </Box>
 
@@ -148,9 +142,10 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
               10,
               page
             ).map((addon) => (
-              <Box
+              <ImageSlot
                 key={addon.id}
-                sx={{
+                data={addon}
+                containerSx={{
                   m: 5,
                   width: 100,
                   height: 100,
@@ -159,7 +154,12 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
                     borderColor: "primary.dark",
                   },
                 }}
-                onClick={() => {
+                imageSx={{
+                  width: 100,
+                  height: 100,
+                  objectFit: "contain",
+                }}
+                handleClick={() => {
                   handleMultiItemChoice(
                     addon,
                     chosenSlot,
@@ -168,18 +168,7 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
                     setChosenAddons
                   );
                 }}
-              >
-                <Box
-                  component="img"
-                  src={addon.image}
-                  alt={`${addon.id} Image`}
-                  sx={{
-                    width: 100,
-                    height: 100,
-                    objectFit: "contain",
-                  }}
-                />
-              </Box>
+              />
             ))}
           </Box>
 

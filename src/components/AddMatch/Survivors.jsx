@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Box, Button } from "@mui/material";
 import AddCharacter from "./AddCharacter";
 
-import SacrificedIcon from "../../assets/other/sacrificedIcon.png";
-import EscapedIcon from "../../assets/other/escapedIcon.png";
+import CharacterRow from "../Matches/CharacterRow";
 
 const Survivors = ({ side, setStep, setData, data }) => {
   const [chosenCharacters, setChosenCharacters] = useState(
@@ -33,102 +32,32 @@ const Survivors = ({ side, setStep, setData, data }) => {
       {chosenCharacters.map((op, index) => (
         <Box
           key={index}
-          m={5}
           onClick={() => {
             setCharacterIndex(index);
             setOpen(true);
           }}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
           sx={{
+            mx: 5,
             "&:hover": {
               cursor: "pointer",
             },
           }}
         >
-          <Box
-            sx={{
-              width: 200,
-              height: 200,
-              border: "1px solid white",
+          <CharacterRow
+            data={{
+              ...op,
+              item: op?.item?.item ? op.item.item : null,
+              addons: op?.item?.addons ? op.item.addons : [null, null],
+              escaped:
+                op === null || op.status === ""
+                  ? null
+                  : op.status === "escaped"
+                  ? true
+                  : false,
             }}
-          >
-            {op && (
-              <Box
-                component="img"
-                src={op.character.image}
-                alt={`${op.character.id} Image`}
-                sx={{
-                  width: 200,
-                  height: 200,
-                  objectFit: "contain",
-                }}
-              />
-            )}
-          </Box>
-          {op
-            ? op.perks.map((perk, perkIndex) => (
-                <Box
-                  key={perkIndex}
-                  sx={{
-                    width: 100,
-                    height: 100,
-                    transform: "rotate(45deg)",
-                    border: "1px solid white",
-                    m: 5,
-                  }}
-                >
-                  {perk && (
-                    <Box
-                      component="img"
-                      src={perk.image}
-                      alt={`${perk.id} Image`}
-                      sx={{
-                        width: 100,
-                        height: 100,
-                        objectFit: "contain",
-                        transform: "rotate(-45deg)",
-                      }}
-                    />
-                  )}
-                </Box>
-              ))
-            : Array.apply(null, Array(4)).map((perkIndex) => (
-                <Box
-                  key={perkIndex}
-                  sx={{
-                    width: 100,
-                    height: 100,
-                    transform: "rotate(45deg)",
-                    border: "1px solid white",
-                    m: 5,
-                  }}
-                ></Box>
-              ))}
-
-          <Box
-            sx={{
-              width: 100,
-              height: 100,
-              border: "1px solid white",
-              borderRadius: "50%",
-              m: 5,
-            }}
-          >
-            {op && op.status && (
-              <Box
-                component="img"
-                src={op.status === "killed" ? SacrificedIcon : EscapedIcon}
-                alt={`Status Image`}
-                sx={{
-                  width: 75,
-                  height: 100,
-                  objectFit: "contain",
-                }}
-              />
-            )}
-          </Box>
+            player={false}
+            side="survivor"
+          />
         </Box>
       ))}
 

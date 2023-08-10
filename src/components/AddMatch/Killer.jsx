@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Button } from "@mui/material";
 import AddCharacter from "./AddCharacter";
+import CharacterRow from "../Matches/CharacterRow";
 
 const Killer = ({ setStep, setData, data }) => {
   const [killer, setKiller] = useState(
@@ -19,78 +20,25 @@ const Killer = ({ setStep, setData, data }) => {
   return (
     <Box>
       <Box
-        m={5}
         onClick={() => {
           setOpen(true);
         }}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
         sx={{
+          mx: 5,
           "&:hover": {
             cursor: "pointer",
           },
         }}
       >
-        <Box
-          sx={{
-            width: 200,
-            height: 200,
-            border: "1px solid white",
+        <CharacterRow
+          data={{
+            ...killer,
+            addons: killer?.addons ? killer.addons : [null, null],
           }}
-        >
-          {killer && (
-            <Box
-              component="img"
-              src={killer.character.image}
-              alt={`${killer.character.id} Image`}
-              sx={{
-                width: 200,
-                height: 200,
-                objectFit: "contain",
-              }}
-            />
-          )}
-        </Box>
-        {killer
-          ? killer.perks.map((perk, perkIndex) => (
-              <Box
-                key={perkIndex}
-                sx={{
-                  width: 100,
-                  height: 100,
-                  transform: "rotate(45deg)",
-                  border: "1px solid white",
-                  m: 5,
-                }}
-              >
-                {perk && (
-                  <Box
-                    component="img"
-                    src={perk.image}
-                    alt={`${perk.id} Image`}
-                    sx={{
-                      width: 100,
-                      height: 100,
-                      objectFit: "contain",
-                      transform: "rotate(-45deg)",
-                    }}
-                  />
-                )}
-              </Box>
-            ))
-          : Array.apply(null, Array(4)).map((perkIndex) => (
-              <Box
-                key={perkIndex}
-                sx={{
-                  width: 100,
-                  height: 100,
-                  transform: "rotate(45deg)",
-                  border: "1px solid white",
-                  m: 5,
-                }}
-              ></Box>
-            ))}
+          player={false}
+          side="killer"
+          noResult
+        />
       </Box>
 
       {/* MODAL */}

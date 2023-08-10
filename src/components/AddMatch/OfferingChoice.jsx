@@ -4,6 +4,7 @@ import { Box, Button, TextField, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import { handleSingleItemChoice } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
+import ImageSlot from "../ImageSlot";
 
 const OfferingChoice = ({ side, setStep, setData, data }) => {
   const [chosenOffering, setChosenOffering] = useState(
@@ -42,34 +43,28 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
         px={35}
         py={10}
       >
-        <Box
-          sx={{
+        <ImageSlot
+          data={chosenOffering}
+          containerSx={{
             width: 150,
             height: 150,
-            border: "1px solid white",
+            border: "1px solid",
+            borderColor: choosing ? "primary.main" : "white",
             "&:hover": {
               borderColor: "primary.dark",
             },
           }}
-          onClick={() => {
+          imageSx={{
+            width: 150,
+            height: 150,
+            objectFit: "contain",
+          }}
+          handleClick={() => {
             setChoosing((prevChoosing) => !prevChoosing);
             setSearch("");
             setPage(0);
           }}
-        >
-          {chosenOffering && (
-            <Box
-              component="img"
-              src={chosenOffering.image}
-              alt={`${chosenOffering.name} Image`}
-              sx={{
-                width: 150,
-                height: 150,
-                objectFit: "contain",
-              }}
-            />
-          )}
-        </Box>
+        />
       </Box>
 
       <Button
@@ -123,9 +118,10 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
               10,
               page
             ).map((offering) => (
-              <Box
+              <ImageSlot
                 key={offering.id}
-                sx={{
+                data={offering}
+                containerSx={{
                   m: 5,
                   width: 100,
                   height: 100,
@@ -134,7 +130,12 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
                     borderColor: "primary.dark",
                   },
                 }}
-                onClick={() => {
+                imageSx={{
+                  width: 100,
+                  height: 100,
+                  objectFit: "contain",
+                }}
+                handleClick={() => {
                   handleSingleItemChoice(
                     offering,
                     chosenOffering,
@@ -142,18 +143,7 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
                     setChoosing
                   );
                 }}
-              >
-                <Box
-                  component="img"
-                  src={offering.image}
-                  alt={`${offering.name} Image`}
-                  sx={{
-                    width: 100,
-                    height: 100,
-                    objectFit: "contain",
-                  }}
-                />
-              </Box>
+              />
             ))}
           </Box>
 

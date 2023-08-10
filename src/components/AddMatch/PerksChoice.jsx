@@ -7,6 +7,7 @@ import {
   handleMultiItemChoice,
 } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
+import ImageSlot from "../ImageSlot";
 
 const PerksChoice = ({ side, setStep, data, setData }) => {
   const [chosenPerks, setChosenPerks] = useState(
@@ -37,9 +38,10 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
         py={10}
       >
         {chosenPerks.map((perk, index) => (
-          <Box
+          <ImageSlot
             key={index}
-            sx={{
+            data={perk}
+            containerSx={{
               width: 100,
               height: 100,
               border: "1px solid",
@@ -49,7 +51,13 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
                 borderColor: "primary.dark",
               },
             }}
-            onClick={() => {
+            imageSx={{
+              width: 100,
+              height: 100,
+              objectFit: "contain",
+              transform: "rotate(-45deg)",
+            }}
+            handleClick={() => {
               handleSlotChoice(
                 index,
                 chosenSlot,
@@ -58,21 +66,7 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
                 setPage
               );
             }}
-          >
-            {perk && (
-              <Box
-                component="img"
-                src={perk.image}
-                alt={`${perk.name} Image`}
-                sx={{
-                  width: 100,
-                  height: 100,
-                  objectFit: "contain",
-                  transform: "rotate(-45deg)",
-                }}
-              />
-            )}
-          </Box>
+          />
         ))}
       </Box>
 
@@ -135,9 +129,10 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
               10,
               page
             ).map((perk) => (
-              <Box
+              <ImageSlot
                 key={perk.id}
-                sx={{
+                data={perk}
+                containerSx={{
                   m: 5,
                   width: 100,
                   height: 100,
@@ -147,7 +142,13 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
                     borderColor: "primary.dark",
                   },
                 }}
-                onClick={() => {
+                imageSx={{
+                  width: 100,
+                  height: 100,
+                  objectFit: "contain",
+                  transform: "rotate(-45deg)",
+                }}
+                handleClick={() => {
                   handleMultiItemChoice(
                     perk,
                     chosenSlot,
@@ -156,19 +157,7 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
                     setChosenPerks
                   );
                 }}
-              >
-                <Box
-                  component="img"
-                  src={perk.image}
-                  alt={`${perk.id} Image`}
-                  sx={{
-                    width: 100,
-                    height: 100,
-                    objectFit: "contain",
-                    transform: "rotate(-45deg)",
-                  }}
-                />
-              </Box>
+              />
             ))}
           </Box>
 

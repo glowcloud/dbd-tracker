@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { supabase } from "../../data/supabaseClient";
+import ImageSlot from "../ImageSlot";
 
 const CharacterChoice = ({ side, setStep, setData }) => {
   const [characters, setCharacters] = useState([]);
@@ -23,9 +24,10 @@ const CharacterChoice = ({ side, setStep, setData }) => {
       px={25}
     >
       {characters.map((character) => (
-        <Box
+        <ImageSlot
           key={character.id}
-          sx={{
+          data={character}
+          containerSx={{
             width: 200,
             height: 200,
             border: "1px solid white",
@@ -34,24 +36,18 @@ const CharacterChoice = ({ side, setStep, setData }) => {
               borderColor: "primary.dark",
             },
           }}
-        >
-          <Box
-            component="img"
-            src={character.image}
-            alt={`${character.name} Image`}
-            sx={{
-              width: 200,
-              height: 200,
-              objectFit: "contain",
-            }}
-            onClick={() => {
-              setData((prevData) => {
-                return { ...prevData, character: character };
-              });
-              setStep((prevStep) => prevStep + 1);
-            }}
-          />
-        </Box>
+          imageSx={{
+            width: 200,
+            height: 200,
+            objectFit: "contain",
+          }}
+          handleClick={() => {
+            setData((prevData) => {
+              return { ...prevData, character: character };
+            });
+            setStep((prevStep) => prevStep + 1);
+          }}
+        />
       ))}
     </Box>
   );

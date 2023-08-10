@@ -8,6 +8,7 @@ import {
   handleMultiItemChoice,
 } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
+import ImageSlot from "../ImageSlot";
 
 const SurvivorItem = ({ setStep, setData, data }) => {
   const [chosenItem, setChosenItem] = useState(
@@ -65,42 +66,37 @@ const SurvivorItem = ({ setStep, setData, data }) => {
         py={10}
       >
         {/* ITEM */}
-        <Box
-          sx={{
+        <ImageSlot
+          data={chosenItem}
+          containerSx={{
             mx: 2,
             width: 200,
             height: 200,
-            border: "1px solid white",
+            border: "1px solid",
+            borderColor: itemChoosing ? "primary.main" : "white",
             "&:hover": {
               borderColor: "primary.dark",
             },
           }}
-          onClick={() => {
+          imageSx={{
+            width: 200,
+            height: 200,
+            objectFit: "contain",
+          }}
+          handleClick={() => {
             setPage(0);
             setSearch("");
             setChosenSlot(-1);
             setItemChoosing((prevChoosing) => !prevChoosing);
           }}
-        >
-          {chosenItem && (
-            <Box
-              component="img"
-              src={chosenItem.image}
-              alt={`${chosenItem.name} Image`}
-              sx={{
-                width: 200,
-                height: 200,
-                objectFit: "contain",
-              }}
-            />
-          )}
-        </Box>
+        />
 
         {/* ADDONS */}
         {chosenAddons.map((addon, index) => (
-          <Box
+          <ImageSlot
             key={index}
-            sx={{
+            data={addon}
+            containerSx={{
               mx: 2,
               width: 125,
               height: 125,
@@ -110,7 +106,12 @@ const SurvivorItem = ({ setStep, setData, data }) => {
                 borderColor: "primary.dark",
               },
             }}
-            onClick={() => {
+            imageSx={{
+              width: 125,
+              height: 125,
+              objectFit: "contain",
+            }}
+            handleClick={() => {
               handleSlotChoice(
                 index,
                 chosenSlot,
@@ -120,20 +121,7 @@ const SurvivorItem = ({ setStep, setData, data }) => {
               );
               setItemChoosing(false);
             }}
-          >
-            {addon && (
-              <Box
-                component="img"
-                src={addon.image}
-                alt={`${addon.name} Image`}
-                sx={{
-                  width: 125,
-                  height: 125,
-                  objectFit: "contain",
-                }}
-              />
-            )}
-          </Box>
+          />
         ))}
       </Box>
 
@@ -207,9 +195,10 @@ const SurvivorItem = ({ setStep, setData, data }) => {
                 10,
                 page
               ).map((item) => (
-                <Box
+                <ImageSlot
                   key={item.id}
-                  sx={{
+                  data={item}
+                  containerSx={{
                     m: 5,
                     width: 150,
                     height: 150,
@@ -218,7 +207,12 @@ const SurvivorItem = ({ setStep, setData, data }) => {
                       borderColor: "primary.dark",
                     },
                   }}
-                  onClick={() => {
+                  imageSx={{
+                    width: 150,
+                    height: 150,
+                    objectFit: "contain",
+                  }}
+                  handleClick={() => {
                     handleSingleItemChoice(
                       item,
                       chosenItem,
@@ -227,18 +221,7 @@ const SurvivorItem = ({ setStep, setData, data }) => {
                     );
                     setChosenAddons([null, null]);
                   }}
-                >
-                  <Box
-                    component="img"
-                    src={item.image}
-                    alt={`${item.id} Image`}
-                    sx={{
-                      width: 150,
-                      height: 150,
-                      objectFit: "contain",
-                    }}
-                  />
-                </Box>
+                />
               ))}
 
             {chosenItem &&
@@ -252,9 +235,10 @@ const SurvivorItem = ({ setStep, setData, data }) => {
                 10,
                 page
               ).map((addon) => (
-                <Box
+                <ImageSlot
                   key={addon.id}
-                  sx={{
+                  data={addon}
+                  containerSx={{
                     m: 5,
                     width: 150,
                     height: 150,
@@ -263,7 +247,12 @@ const SurvivorItem = ({ setStep, setData, data }) => {
                       borderColor: "primary.dark",
                     },
                   }}
-                  onClick={() => {
+                  imageSx={{
+                    width: 150,
+                    height: 150,
+                    objectFit: "contain",
+                  }}
+                  handleClick={() => {
                     handleMultiItemChoice(
                       addon,
                       chosenSlot,
@@ -272,18 +261,7 @@ const SurvivorItem = ({ setStep, setData, data }) => {
                       setChosenAddons
                     );
                   }}
-                >
-                  <Box
-                    component="img"
-                    src={addon.image}
-                    alt={`${addon.id} Image`}
-                    sx={{
-                      width: 150,
-                      height: 150,
-                      objectFit: "contain",
-                    }}
-                  />
-                </Box>
+                />
               ))}
           </Box>
 

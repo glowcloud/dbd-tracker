@@ -1,18 +1,19 @@
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 
 const ImageSlot = ({ data, containerSx, imageSx, handleClick }) => {
   return (
-    <Box sx={containerSx}>
-      {data && (
-        <Box
-          component="img"
-          src={data.image}
-          alt={`${data.name} Image`}
-          sx={imageSx}
-          onClick={handleClick}
-        />
-      )}
-    </Box>
+    <Tooltip title={data?.name ? data.name : ""} arrow>
+      <Box sx={containerSx} onClick={handleClick}>
+        {data && (
+          <Box
+            component="img"
+            src={data.image}
+            alt={`${data.name} Image`}
+            sx={imageSx}
+          />
+        )}
+      </Box>
+    </Tooltip>
   );
 };
 

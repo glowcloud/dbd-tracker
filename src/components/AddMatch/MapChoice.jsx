@@ -4,6 +4,7 @@ import { Box, Button, TextField, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import { handleSingleItemChoice } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
+import ImageSlot from "../ImageSlot";
 
 const MapChoice = ({ setStep, setData, data }) => {
   const [chosenMap, setChosenMap] = useState(
@@ -39,34 +40,28 @@ const MapChoice = ({ setStep, setData, data }) => {
         px={35}
         py={10}
       >
-        <Box
-          sx={{
+        <ImageSlot
+          data={chosenMap}
+          containerSx={{
             width: 250,
             height: 200,
-            border: "1px solid white",
+            border: "1px solid",
+            borderColor: choosing ? "primary.main" : "white",
             "&:hover": {
               borderColor: "primary.dark",
             },
           }}
-          onClick={() => {
+          imageSx={{
+            width: 250,
+            height: 200,
+            objectFit: "contain",
+          }}
+          handleClick={() => {
+            setChoosing((prevChoosing) => !prevChoosing);
             setSearch("");
             setPage(0);
-            setChoosing((prevChoosing) => !prevChoosing);
           }}
-        >
-          {chosenMap && (
-            <Box
-              component="img"
-              src={chosenMap.image}
-              alt={`${chosenMap.name} Image`}
-              sx={{
-                width: 250,
-                height: 200,
-                objectFit: "contain",
-              }}
-            />
-          )}
-        </Box>
+        />
       </Box>
 
       <Button
@@ -122,9 +117,10 @@ const MapChoice = ({ setStep, setData, data }) => {
               6,
               page
             ).map((realmMap) => (
-              <Box
+              <ImageSlot
                 key={realmMap.id}
-                sx={{
+                data={realmMap}
+                containerSx={{
                   m: 5,
                   width: 250,
                   height: 200,
@@ -133,7 +129,12 @@ const MapChoice = ({ setStep, setData, data }) => {
                     borderColor: "primary.dark",
                   },
                 }}
-                onClick={() => {
+                imageSx={{
+                  width: 250,
+                  height: 200,
+                  objectFit: "contain",
+                }}
+                handleClick={() => {
                   handleSingleItemChoice(
                     realmMap,
                     chosenMap,
@@ -141,18 +142,7 @@ const MapChoice = ({ setStep, setData, data }) => {
                     setChoosing
                   );
                 }}
-              >
-                <Box
-                  component="img"
-                  src={realmMap.image}
-                  alt={`${realmMap.id} Image`}
-                  sx={{
-                    width: 250,
-                    height: 200,
-                    objectFit: "contain",
-                  }}
-                />
-              </Box>
+              />
             ))}
           </Box>
 

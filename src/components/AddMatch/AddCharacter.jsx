@@ -13,6 +13,7 @@ import PerksChoice from "./PerksChoice";
 import KillerAddons from "./KillerAddons";
 import SurvivorItem from "./SurvivorItem";
 import OfferingChoice from "./OfferingChoice";
+import CharacterRow from "../Matches/CharacterRow";
 
 const AddCharacter = ({
   open,
@@ -99,6 +100,7 @@ const AddCharacter = ({
           p: 4,
           overflow: "auto",
           height: "90%",
+          textAlign: "center",
         }}
       >
         {/* CHARACTER */}
@@ -152,52 +154,25 @@ const AddCharacter = ({
         {/* SUMMARY AND STATUS */}
         {step === 4 && (
           <Box>
-            <Box mx={5} display="flex">
-              <Box
-                sx={{
-                  width: 200,
-                  height: 200,
-                  border: "1px solid white",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={character.character.image}
-                  alt={`${character.character.id} Image`}
-                  sx={{
-                    width: 200,
-                    height: 200,
-                    objectFit: "contain",
-                  }}
-                />
-              </Box>
-              {character.perks.map((perk, perkIndex) => (
-                <Box
-                  key={perkIndex}
-                  sx={{
-                    width: 100,
-                    height: 100,
-                    transform: "rotate(45deg)",
-                    border: "1px solid white",
-                    m: 5,
-                  }}
-                >
-                  {perk && (
-                    <Box
-                      component="img"
-                      src={perk.image}
-                      alt={`${perk.id} Image`}
-                      sx={{
-                        width: 100,
-                        height: 100,
-                        objectFit: "contain",
-                        transform: "rotate(-45deg)",
-                      }}
-                    />
-                  )}
-                </Box>
-              ))}
-            </Box>
+            <CharacterRow
+              data={{
+                ...character,
+                item: character?.sideData.item?.item
+                  ? character.sideData.item.item
+                  : null,
+                addons:
+                  characterType === "survivor"
+                    ? character?.sideData.item?.addons
+                      ? character.sideData.item.addons
+                      : null
+                    : character?.sideData?.addons
+                    ? character.sideData.addons
+                    : null,
+              }}
+              player={false}
+              side={characterType}
+              noResult
+            />
 
             {/* STATUS - SURVIVORS */}
             {characterType === "survivor" && (
@@ -215,7 +190,6 @@ const AddCharacter = ({
                   >
                     <MenuItem value="escaped">Escaped</MenuItem>
                     <MenuItem value="killed">Killed</MenuItem>
-                    <MenuItem value="disconnected">Disconnected</MenuItem>
                   </Select>
                 </FormControl>
               </Box>
@@ -231,14 +205,13 @@ const AddCharacter = ({
                           perks: [],
                           addons: [],
                           offering: null,
-                          status: "",
                         }
                       : {
                           character: null,
                           perks: [],
                           item: null,
                           offering: null,
-                          status: "",
+                          status: null,
                         }
                   );
                   setStep(0);

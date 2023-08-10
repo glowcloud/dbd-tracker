@@ -3,7 +3,7 @@ import ImageSlot from "../ImageSlot";
 import SacrificedIcon from "../../assets/other/sacrificedIcon.png";
 import EscapedIcon from "../../assets/other/escapedIcon.png";
 
-const CharacterRow = ({ data, player, side }) => {
+const CharacterRow = ({ data, player, side, noResult }) => {
   return (
     <Box
       display="flex"
@@ -133,15 +133,15 @@ const CharacterRow = ({ data, player, side }) => {
               }}
             />
           ))}
-      <Divider orientation="vertical" flexItem />
+      {!noResult && <Divider orientation="vertical" flexItem />}
 
       {/* RESULT */}
-      {side === "killer" && (
+      {!noResult && side === "killer" && (
         <Typography variant="h5" px={5}>
           {data?.result ? data.result : ""}
         </Typography>
       )}
-      {side === "survivor" && (
+      {!noResult && side === "survivor" && (
         <Box
           sx={{
             width: 100,
@@ -151,7 +151,7 @@ const CharacterRow = ({ data, player, side }) => {
             m: 5,
           }}
         >
-          {data?.escaped >= 0 && (
+          {data?.escaped !== null && data?.escaped >= 0 && (
             <Box
               component="img"
               src={data.escaped ? EscapedIcon : SacrificedIcon}
