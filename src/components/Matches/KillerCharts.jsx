@@ -5,8 +5,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
@@ -234,10 +232,10 @@ const KillerCharts = ({ matches }) => {
           <MenuItem value="survivorPerks">Survivor perks count</MenuItem>
         </Select>
       </FormControl>
-      <ResponsiveContainer width="100%" height={500}>
+      <ResponsiveContainer width="100%" height={500 + data.length * 30}>
         <BarChart
           width={500}
-          height={300}
+          height={300 + data.length * 30}
           data={data}
           margin={{
             top: 5,
