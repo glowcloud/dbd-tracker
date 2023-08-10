@@ -283,27 +283,46 @@ const Matches = () => {
 
       {/* SIDE CHOICE */}
       {!loading && !side && (
-        <Box display="flex" alignItems="center" justifyContent="center" my={10}>
-          <Box
-            component="img"
-            src={survivorIcon}
-            alt="Survivor Icon"
-            sx={{ width: 150, height: 150, mx: "1rem" }}
-            onClick={() => {
-              setSide("survivor");
-            }}
-          />
-          <Divider orientation="vertical" flexItem />
-          <Box
-            component="img"
-            src={killerIcon}
-            alt="Killer Icon"
-            sx={{ width: 150, height: 150, mx: "1rem" }}
-            onClick={() => {
-              setSide("killer");
-            }}
-          />
-        </Box>
+        <>
+          <Typography variant="h4" mt={10} mb={5}>
+            Choose your side:
+          </Typography>
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <Box
+              component="img"
+              src={survivorIcon}
+              alt="Survivor Icon"
+              sx={{
+                width: 150,
+                height: 150,
+                mx: "1rem",
+                "&:hover": {
+                  cursor: "pointer",
+                },
+              }}
+              onClick={() => {
+                setSide("survivor");
+              }}
+            />
+            <Divider orientation="vertical" flexItem />
+            <Box
+              component="img"
+              src={killerIcon}
+              alt="Killer Icon"
+              sx={{
+                width: 150,
+                height: 150,
+                mx: "1rem",
+                "&:hover": {
+                  cursor: "pointer",
+                },
+              }}
+              onClick={() => {
+                setSide("killer");
+              }}
+            />
+          </Box>
+        </>
       )}
 
       {!loading && side && (
@@ -312,12 +331,31 @@ const Matches = () => {
             variant="outlined"
             sx={{
               my: 2,
+              mx: 1,
             }}
             onClick={() => {
               setShowStats((prevShow) => !prevShow);
             }}
           >
-            {showStats ? "Hide statistics" : "Show statistics"}
+            {showStats ? "Show matches" : "Show statistics"}
+          </Button>
+
+          <Button
+            variant="outlined"
+            sx={{
+              my: 2,
+              mx: 1,
+            }}
+            onClick={() => {
+              setSide((prevSide) =>
+                prevSide === "killer" ? "survivor" : "killer"
+              );
+              setShowStats(false);
+              setCurrentPage(0);
+              setCharacterChoice("all");
+            }}
+          >
+            {side === "killer" ? "Survivor matches" : "Killer matches"}
           </Button>
 
           {/* CHARTS */}
@@ -335,8 +373,8 @@ const Matches = () => {
           {showStats && <Divider />}
 
           {/* MATCH PREVIEWS */}
-          {matches?.length > 0 && (
-            <Box py={3}>
+          {!showStats && matches?.length > 0 && (
+            <Box>
               {/* CHOOSE CHARACTER */}
 
               <FormControl sx={{ width: 300, my: 2 }}>

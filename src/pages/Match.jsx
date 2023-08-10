@@ -114,8 +114,9 @@ const Match = () => {
                     data.survivor1.perk3,
                     data.survivor1.perk4,
                   ],
-                  item: data.item,
+                  item: data.survivor1.item,
                   addons: [data.survivor1.addon1, data.survivor1.addon2],
+                  offering: data.survivor1.offering,
                   escaped: data.survivor1.escaped,
                 }
               : null,
@@ -129,8 +130,9 @@ const Match = () => {
                     data.survivor2.perk3,
                     data.survivor2.perk4,
                   ],
-                  item: data.item,
+                  item: data.survivor2.item,
                   addons: [data.survivor2.addon1, data.survivor2.addon2],
+                  offering: data.survivor2.offering,
                   escaped: data.survivor2.escaped,
                 }
               : null,
@@ -143,8 +145,9 @@ const Match = () => {
                     data.survivor3.perk3,
                     data.survivor3.perk4,
                   ],
-                  item: data.item,
+                  item: data.survivor3.item,
                   addons: [data.survivor3.addon1, data.survivor3.addon2],
+                  offering: data.survivor3.offering,
                   escaped: data.survivor3.escaped,
                 }
               : null,
@@ -157,8 +160,9 @@ const Match = () => {
                     data.survivor4.perk3,
                     data.survivor4.perk4,
                   ],
-                  item: data.item,
+                  item: data.survivor4.item,
                   addons: [data.survivor4.addon1, data.survivor4.addon2],
+                  offering: data.survivor4.offering,
                   escaped: data.survivor4.escaped,
                 }
               : null,
