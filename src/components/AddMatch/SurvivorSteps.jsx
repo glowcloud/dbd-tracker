@@ -8,6 +8,7 @@ import Survivors from "./Survivors";
 import Killer from "./Killer";
 import MapChoice from "./MapChoice";
 import MatchResult from "./MatchResult";
+import Summary from "./Summary";
 
 const SurvivorSteps = ({ step, setStep, data, setData, addMatch }) => {
   return (
@@ -65,9 +66,12 @@ const SurvivorSteps = ({ step, setStep, data, setData, addMatch }) => {
 
       {/* STEP 10 - CONFIRM INFO - ADD MATCH FOR NOW */}
       {step === 10 && (
-        <Button sx={{ mt: 5 }} onClick={addMatch}>
-          Add Match
-        </Button>
+        <>
+          <Summary data={{ ...data, ...data.sideData }} />
+          <Button sx={{ mt: 5 }} onClick={addMatch}>
+            Add Match
+          </Button>
+        </>
       )}
     </>
   );
