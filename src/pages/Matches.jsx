@@ -10,15 +10,13 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import survivorIcon from "../assets/other/survivorIcon.png";
-import killerIcon from "../assets/other/killerIcon.png";
-import KillerCharts from "../components/Matches/KillerCharts";
-import SurvivorCharts from "../components/Matches/SurvivorCharts";
 import { supabase } from "../data/supabaseClient";
 import { paginate } from "../utils/paginate";
 import CustomPagination from "../components/CustomPagination";
 import CharacterRow from "../components/Matches/CharacterRow";
+import StatsCharts from "../components/Matches/StatsCharts";
+import survivorIcon from "../assets/other/survivorIcon.png";
+import killerIcon from "../assets/other/killerIcon.png";
 
 const Matches = () => {
   const [loading, setLoading] = useState(true);
@@ -359,18 +357,12 @@ const Matches = () => {
           </Button>
 
           {/* CHARTS */}
-          {showStats && side === "killer" && (
-            <KillerCharts
-              matches={matches.filter((match) => match.side === side)}
-              chartType="averagePerk"
-            />
-          )}
-          {showStats && side === "survivor" && (
-            <SurvivorCharts
+          {showStats && (
+            <StatsCharts
+              side={side}
               matches={matches.filter((match) => match.side === side)}
             />
           )}
-          {showStats && <Divider />}
 
           {/* MATCH PREVIEWS */}
           {!showStats && matches?.length > 0 && (

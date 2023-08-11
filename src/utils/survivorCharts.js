@@ -1,14 +1,4 @@
-import { useEffect, useState } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
-} from "recharts";
-import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-
+// GENERAL STATUS COUNT
 const getGeneralData = (matches) => {
   const dataMap = new Map([
     ["escaped", 0],
@@ -226,147 +216,12 @@ const getKillerPerksCount = (matches) => {
     .sort((a, b) => b.count - a.count);
 };
 
-// SURVIVOR PERKS COUNT
-const getSurvivorPerksCount = (matches) => {
-  const dataMap = new Map();
-
-  matches.forEach((match) => {
-    match.survivors.forEach((survivor) => {
-      if (survivor) {
-        survivor.perks.forEach((perk) => {
-          if (perk) {
-            if (dataMap.has(perk.name)) {
-              dataMap.set(perk.name, dataMap.get(perk.name) + 1);
-            } else {
-              dataMap.set(perk.name, 1);
-            }
-          }
-        });
-      }
-    });
-  });
-
-  return [...dataMap]
-    .map((item) => {
-      return {
-        name: item[0],
-        count: item[1],
-      };
-    })
-    .sort((a, b) => b.count - a.count);
+export {
+  getGeneralData,
+  getAverageSurvivorData,
+  getAveragePerkData,
+  getAverageKillerRate,
+  getAverageKillerEscapes,
+  getKillersCount,
+  getKillerPerksCount,
 };
-
-// MAPS COUNT
-const getMapsData = (matches) => {
-  const dataMap = new Map();
-
-  matches.forEach((match) => {
-    if (match.realmMap) {
-      if (dataMap.has(match.realmMap.name)) {
-        dataMap.set(match.realmMap.name, dataMap.get(match.realmMap.name) + 1);
-      } else {
-        dataMap.set(match.realmMap.name, 1);
-      }
-    }
-  });
-
-  return [...dataMap]
-    .map((item) => {
-      return { name: item[0], count: item[1] };
-    })
-    .sort((a, b) => b.count - a.count);
-};
-
-const SurvivorCharts = ({ matches }) => {
-  const [data, setData] = useState([]);
-  const [chartType, setChartType] = useState("general");
-
-  useEffect(() => {
-    switch (chartType) {
-      case "general":
-        setData(getGeneralData(matches));
-        break;
-      case "average":
-        setData(getAverageSurvivorData(matches));
-        break;
-      case "averagePerk":
-        setData(getAveragePerkData(matches));
-        break;
-      case "killersCount":
-        setData(getKillersCount(matches));
-        break;
-      case "averageKillerRate":
-        setData(getAverageKillerRate(matches));
-        break;
-      case "averageKillerEscapes":
-        setData(getAverageKillerEscapes(matches));
-        break;
-      case "killerPerksCount":
-        setData(getKillerPerksCount(matches));
-        break;
-      case "survivorPerksCount":
-        setData(getSurvivorPerksCount(matches));
-        break;
-      case "mapsCount":
-        setData(getMapsData(matches));
-        break;
-      default:
-        setData(getGeneralData(matches));
-        break;
-    }
-  }, [matches, chartType]);
-
-  return (
-    <Box>
-      <FormControl sx={{ width: 300, my: 2 }}>
-        <InputLabel>Chart Choice</InputLabel>
-        <Select
-          value={chartType}
-          label="chart"
-          onChange={(e) => setChartType(e.target.value)}
-        >
-          <MenuItem value="general">Escaped and killed count</MenuItem>
-          <MenuItem value="average">Average escape rate by survivor</MenuItem>
-          <MenuItem value="averagePerk">Average escape rate by perk</MenuItem>
-          <MenuItem value="killersCount">Killers count</MenuItem>
-          <MenuItem value="averageKillerRate">Average kills by killer</MenuItem>
-          <MenuItem value="averageKillerEscapes">
-            Your average escape rate by killer
-          </MenuItem>
-          <MenuItem value="killerPerksCount">Killer perks count</MenuItem>
-          <MenuItem value="survivorPerksCount">Survivor perks count</MenuItem>
-          <MenuItem value="mapsCount">Maps count</MenuItem>
-        </Select>
-      </FormControl>
-      <ResponsiveContainer width="100%" height={500 + data.length * 30}>
-        <BarChart
-          width={500}
-          height={300 + data.length * 30}
-          data={data}
-          margin={{
-            top: 5,
-            right: 100,
-            left: 100,
-            bottom: 5,
-          }}
-          layout={chartType === "general" ? "horizontal" : "vertical"}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            type={chartType === "general" ? "category" : "number"}
-            dataKey={chartType === "general" ? "name" : "count"}
-          />
-          <YAxis
-            type={chartType === "general" ? "number" : "category"}
-            dataKey={chartType === "general" ? "count" : "name"}
-          />
-          {/* <Tooltip /> */}
-          {/* <Legend /> */}
-          <Bar dataKey="count" fill="#8884d8" />
-        </BarChart>
-      </ResponsiveContainer>
-    </Box>
-  );
-};
-
-export default SurvivorCharts;
