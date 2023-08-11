@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import SideChoice from "../components/AddMatch/SideChoice";
+import SideChoice from "../components/SideChoice";
 import ControlButtons from "../components/AddMatch/ControlButtons";
 
 import { useAuth } from "../hooks/useAuth";
@@ -37,7 +37,34 @@ const AddMatch = () => {
   return (
     <Box textAlign="center">
       {/* STEP 0 - SIDE */}
-      {step === 0 && <SideChoice setStep={setStep} setData={setData} />}
+      {step === 0 && (
+        <SideChoice
+          handleSurvivorChoice={() => {
+            setData((prevData) => {
+              return {
+                ...prevData,
+                side: "survivor",
+                sideData: {
+                  item: null,
+                  status: "",
+                  killer: null,
+                },
+              };
+            });
+            setStep((prevStep) => prevStep + 1);
+          }}
+          handleKillerChoice={() => {
+            setData((prevData) => {
+              return {
+                ...prevData,
+                side: "killer",
+                sideData: { addons: [] },
+              };
+            });
+            setStep((prevStep) => prevStep + 1);
+          }}
+        />
+      )}
 
       {/* ------------- KILLER STEPS ------------- */}
       {step > 0 && data.side === "killer" && (

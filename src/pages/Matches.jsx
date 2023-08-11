@@ -1,22 +1,14 @@
-import {
-  Box,
-  Typography,
-  Divider,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Button,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { paginate } from "../utils/paginate";
 import CustomPagination from "../components/CustomPagination";
 import CharacterRow from "../components/Matches/CharacterRow";
 import StatsCharts from "../components/Matches/StatsCharts";
-import survivorIcon from "../assets/other/survivorIcon.png";
-import killerIcon from "../assets/other/killerIcon.png";
 import { fetchMatches } from "../utils/getMatchUtils";
+import SideChoice from "../components/SideChoice";
+import ViewButtons from "../components/Matches/ViewButtons";
+import CharacterSelect from "../components/Matches/CharacterSelect";
 
 const Matches = () => {
   const [loading, setLoading] = useState(true);
@@ -44,80 +36,23 @@ const Matches = () => {
 
       {/* SIDE CHOICE */}
       {!loading && !side && (
-        <>
-          <Typography variant="h4" mt={10} mb={5}>
-            Choose your side:
-          </Typography>
-          <Box display="flex" alignItems="center" justifyContent="center">
-            <Box
-              component="img"
-              src={survivorIcon}
-              alt="Survivor Icon"
-              sx={{
-                width: 150,
-                height: 150,
-                mx: "1rem",
-                "&:hover": {
-                  cursor: "pointer",
-                },
-              }}
-              onClick={() => {
-                setSide("survivor");
-              }}
-            />
-            <Divider orientation="vertical" flexItem />
-            <Box
-              component="img"
-              src={killerIcon}
-              alt="Killer Icon"
-              sx={{
-                width: 150,
-                height: 150,
-                mx: "1rem",
-                "&:hover": {
-                  cursor: "pointer",
-                },
-              }}
-              onClick={() => {
-                setSide("killer");
-              }}
-            />
-          </Box>
-        </>
+        <SideChoice
+          handleKillerChoice={() => setSide("killer")}
+          handleSurvivorChoice={() => setSide("survivor")}
+        />
       )}
 
       {!loading && side && (
         <Box>
-          <Button
-            variant="outlined"
-            sx={{
-              my: 2,
-              mx: 1,
-            }}
-            onClick={() => {
-              setShowStats((prevShow) => !prevShow);
-            }}
-          >
-            {showStats ? "Show matches" : "Show statistics"}
-          </Button>
-
-          <Button
-            variant="outlined"
-            sx={{
-              my: 2,
-              mx: 1,
-            }}
-            onClick={() => {
-              setSide((prevSide) =>
-                prevSide === "killer" ? "survivor" : "killer"
-              );
-              setShowStats(false);
-              setCurrentPage(0);
-              setCharacterChoice("all");
-            }}
-          >
-            {side === "killer" ? "Survivor matches" : "Killer matches"}
-          </Button>
+          {/* VIEW BUTTONS */}
+          <ViewButtons
+            showStats={showStats}
+            setShowStats={setShowStats}
+            side={side}
+            setSide={setSide}
+            setCurrentPage={setCurrentPage}
+            setCharacterChoice={setCharacterChoice}
+          />
 
           {/* CHARTS */}
           {showStats && (
@@ -127,37 +62,18 @@ const Matches = () => {
             />
           )}
 
-          {/* MATCH PREVIEWS */}
+          {/* MATCHES PREVIEW */}
           {!showStats && matches?.length > 0 && (
             <Box>
-              {/* CHOOSE CHARACTER */}
+              {/* CHARACTER FILTER */}
+              <CharacterSelect
+                characterChoice={characterChoice}
+                setCharacterChoice={setCharacterChoice}
+                matches={matches}
+                side={side}
+              />
 
-              <FormControl sx={{ width: 300, my: 2 }}>
-                <InputLabel>Character</InputLabel>
-                <Select
-                  value={characterChoice}
-                  label="chart"
-                  onChange={(e) => setCharacterChoice(e.target.value)}
-                  defaultValue="all"
-                >
-                  <MenuItem value="all">All</MenuItem>
-                  {[
-                    ...new Map(
-                      matches
-                        .filter((match) => match.side === side)
-                        .map((match) => [match.character.id, match])
-                    ).values(),
-                  ].map((match) => (
-                    <MenuItem
-                      key={match.character.id}
-                      value={match.character.id}
-                    >
-                      {match.character.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
+              {/* MATCHES */}
               {paginate(
                 matches.filter(
                   (match) =>

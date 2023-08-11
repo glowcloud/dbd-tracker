@@ -2,7 +2,7 @@ import { Box, Divider, Typography } from "@mui/material";
 import survivorIcon from "../../assets/other/survivorIcon.png";
 import killerIcon from "../../assets/other/killerIcon.png";
 
-const SideChoice = ({ setStep, setData }) => {
+const SideChoice = ({ handleSurvivorChoice, handleKillerChoice }) => {
   return (
     <Box>
       <Typography variant="h4" mt={10} mb={5}>
@@ -21,20 +21,7 @@ const SideChoice = ({ setStep, setData }) => {
               cursor: "pointer",
             },
           }}
-          onClick={() => {
-            setData((prevData) => {
-              return {
-                ...prevData,
-                side: "survivor",
-                sideData: {
-                  item: null,
-                  status: "",
-                  killer: null,
-                },
-              };
-            });
-            setStep(1);
-          }}
+          onClick={handleSurvivorChoice}
         />
         <Divider orientation="vertical" flexItem />
         <Box
@@ -49,16 +36,7 @@ const SideChoice = ({ setStep, setData }) => {
               cursor: "pointer",
             },
           }}
-          onClick={() => {
-            setData((prevData) => {
-              return {
-                ...prevData,
-                side: "killer",
-                sideData: { addons: [] },
-              };
-            });
-            setStep((prevStep) => prevStep + 1);
-          }}
+          onClick={handleKillerChoice}
         />
       </Box>
     </Box>
