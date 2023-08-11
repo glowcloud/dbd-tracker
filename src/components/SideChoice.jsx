@@ -1,6 +1,6 @@
 import { Box, Divider, Typography } from "@mui/material";
-import survivorIcon from "../../assets/other/survivorIcon.png";
-import killerIcon from "../../assets/other/killerIcon.png";
+import survivorIcon from "../assets/other/survivorIcon.png";
+import killerIcon from "../assets/other/killerIcon.png";
 
 const SideChoice = ({ handleSurvivorChoice, handleKillerChoice }) => {
   return (
