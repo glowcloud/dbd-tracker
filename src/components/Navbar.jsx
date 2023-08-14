@@ -1,18 +1,21 @@
 import { AppBar, Toolbar, Box, Typography } from "@mui/material";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/other/bloodpointsIcon.png";
 import { useAuth } from "../hooks/useAuth";
+import NavbarLink from "./NavbarLink";
 
-const userNavItems = [
-  { title: "Home", route: "/" },
-  { title: "Matches", route: "/matches" },
-  { title: "Add Match", route: "/add-match" },
-];
-
-const guestNavItems = [
-  { title: "Home", route: "/" },
-  { title: "Login", route: "/login" },
-];
+const getNavItems = (session) => {
+  if (session)
+    return [
+      { title: "Home", route: "/" },
+      { title: "Matches", route: "/matches" },
+      { title: "Add Match", route: "/add-match" },
+    ];
+  return [
+    { title: "Home", route: "/" },
+    { title: "Login", route: "/login" },
+  ];
+};
 
 const Navbar = () => {
   const { session, handleSignOut } = useAuth();
@@ -34,63 +37,14 @@ const Navbar = () => {
           <Typography variant="h6">Dead by Daylight Tracker</Typography>
         </Box>
 
-        {session
-          ? userNavItems.map((item) => (
-              <Box
-                component={Link}
-                key={item.title}
-                to={item.route}
-                sx={{
-                  textDecoration: "none",
-                  mx: 2,
-                  "&:visited": {
-                    color: "inherit",
-                  },
-                  "&:hover": {
-                    color: "primary.dark",
-                  },
-                }}
-              >
-                {item.title}
-              </Box>
-            ))
-          : guestNavItems.map((item) => (
-              <Box
-                component={Link}
-                key={item.title}
-                to={item.route}
-                sx={{
-                  textDecoration: "none",
-                  mx: 2,
-                  "&:visited": {
-                    color: "inherit",
-                  },
-                  "&:hover": {
-                    color: "primary.dark",
-                  },
-                }}
-              >
-                {item.title}
-              </Box>
-            ))}
+        {getNavItems(session).map((item) => (
+          <NavbarLink key={item.title} item={item} />
+        ))}
         {session && (
-          <Box
-            component={Link}
-            to={"/"}
-            onClick={handleSignOut}
-            sx={{
-              textDecoration: "none",
-              mx: 2,
-              "&:visited": {
-                color: "inherit",
-              },
-              "&:hover": {
-                color: "primary.dark",
-              },
-            }}
-          >
-            Logout
-          </Box>
+          <NavbarLink
+            item={{ title: "Logout", route: "/" }}
+            handleClick={handleSignOut}
+          />
         )}
       </Toolbar>
     </AppBar>
