@@ -2,14 +2,10 @@ import { Box, Divider } from "@mui/material";
 import { useState, useEffect } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { paginate } from "../../utils/paginate";
-import {
-  handleSlotChoice,
-  handleMultiItemChoice,
-} from "../../utils/addMatchUtils";
-import CustomPagination from "../CustomPagination";
-import ImageSlot from "../ImageSlot";
-import SearchBar from "./SearchBar";
+import { handleMultiItemChoice } from "../../utils/addMatchUtils";
 import ChoiceButtons from "./ChoiceButtons";
+import MultiSlotChoice from "./MultiSlotChoice";
+import ChoiceList from "./ChoiceList";
 
 const PerksChoice = ({ side, setStep, data, setData }) => {
   const [chosenPerks, setChosenPerks] = useState(
@@ -36,45 +32,23 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
   return (
     <Box>
       {/* PERK SLOTS */}
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-around"
-        px={35}
-        py={10}
-      >
-        {chosenPerks.map((perk, index) => (
-          <ImageSlot
-            key={index}
-            data={perk}
-            containerSx={{
-              width: 100,
-              height: 100,
-              border: "1px solid",
-              borderColor: chosenSlot === index ? "primary.main" : "white",
-              transform: "rotate(45deg)",
-              "&:hover": {
-                borderColor: "primary.dark",
-              },
-            }}
-            imageSx={{
-              width: 100,
-              height: 100,
-              objectFit: "contain",
-              transform: "rotate(-45deg)",
-            }}
-            handleClick={() => {
-              handleSlotChoice(
-                index,
-                chosenSlot,
-                setChosenSlot,
-                setSearch,
-                setPage
-              );
-            }}
-          />
-        ))}
-      </Box>
+      <MultiSlotChoice
+        chosenItems={chosenPerks}
+        chosenSlot={chosenSlot}
+        setChosenSlot={setChosenSlot}
+        setSearch={setSearch}
+        setPage={setPage}
+        customConSx={{
+          width: 100,
+          height: 100,
+          transform: "rotate(45deg)",
+        }}
+        customImgSx={{
+          width: 100,
+          height: 100,
+          transform: "rotate(-45deg)",
+        }}
+      />
 
       {/* CONTROLS */}
       <ChoiceButtons
@@ -93,64 +67,41 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
 
       {/* PERKS */}
       {chosenSlot >= 0 && (
-        <Box>
-          {/* SEARCH BAR */}
-          <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
-
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            flexWrap="wrap"
-            px={25}
-          >
-            {paginate(
-              perks.filter((perk) => perk.name.toLowerCase().includes(search)),
-              10,
-              page
-            ).map((perk) => (
-              <ImageSlot
-                key={perk.id}
-                data={perk}
-                containerSx={{
-                  m: 5,
-                  width: 100,
-                  height: 100,
-                  border: "1px solid white",
-                  transform: "rotate(45deg)",
-                  "&:hover": {
-                    borderColor: "primary.dark",
-                  },
-                }}
-                imageSx={{
-                  width: 100,
-                  height: 100,
-                  objectFit: "contain",
-                  transform: "rotate(-45deg)",
-                }}
-                handleClick={() => {
-                  handleMultiItemChoice(
-                    perk,
-                    chosenSlot,
-                    setChosenSlot,
-                    chosenPerks,
-                    setChosenPerks
-                  );
-                }}
-              />
-            ))}
-          </Box>
-
-          <CustomPagination
-            itemsCount={
-              perks.filter((perk) => perk.name.toLowerCase().includes(search))
-                .length
-            }
-            itemsPerPage={10}
-            page={page}
-            setPage={setPage}
-          />
-        </Box>
+        <ChoiceList
+          filteredChoices={paginate(
+            perks.filter((perk) => perk.name.toLowerCase().includes(search)),
+            10,
+            page
+          )}
+          handleChoice={(choice) => {
+            handleMultiItemChoice(
+              choice,
+              chosenSlot,
+              setChosenSlot,
+              chosenPerks,
+              setChosenPerks
+            );
+          }}
+          itemsCount={
+            perks.filter((perk) => perk.name.toLowerCase().includes(search))
+              .length
+          }
+          itemsPerPage={10}
+          search={search}
+          setSearch={setSearch}
+          page={page}
+          setPage={setPage}
+          customConSx={{
+            width: 100,
+            height: 100,
+            transform: "rotate(45deg)",
+          }}
+          customImgSx={{
+            width: 100,
+            height: 100,
+            transform: "rotate(-45deg)",
+          }}
+        />
       )}
     </Box>
   );

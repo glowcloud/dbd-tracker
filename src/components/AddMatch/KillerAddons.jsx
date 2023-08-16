@@ -2,14 +2,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { Box, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
-import {
-  handleSlotChoice,
-  handleMultiItemChoice,
-} from "../../utils/addMatchUtils";
-import CustomPagination from "../CustomPagination";
-import ImageSlot from "../ImageSlot";
-import SearchBar from "./SearchBar";
+import { handleMultiItemChoice } from "../../utils/addMatchUtils";
 import ChoiceButtons from "./ChoiceButtons";
+import ChoiceList from "./ChoiceList";
+import MultiSlotChoice from "./MultiSlotChoice";
 
 const KillerAddons = ({ killer, setStep, setData, data }) => {
   const [chosenAddons, setChosenAddons] = useState(
@@ -42,44 +38,15 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
   return (
     <Box>
       {/* ADDON SLOTS */}
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        px={35}
-        py={10}
-      >
-        {chosenAddons.map((addon, index) => (
-          <ImageSlot
-            key={index}
-            data={addon}
-            containerSx={{
-              mx: 5,
-              width: 150,
-              height: 150,
-              border: "1px solid",
-              borderColor: chosenSlot === index ? "primary.main" : "white",
-              "&:hover": {
-                borderColor: "primary.dark",
-              },
-            }}
-            imageSx={{
-              width: 150,
-              height: 150,
-              objectFit: "contain",
-            }}
-            handleClick={() => {
-              handleSlotChoice(
-                index,
-                chosenSlot,
-                setChosenSlot,
-                setSearch,
-                setPage
-              );
-            }}
-          />
-        ))}
-      </Box>
+      <MultiSlotChoice
+        chosenItems={chosenAddons}
+        chosenSlot={chosenSlot}
+        setChosenSlot={setChosenSlot}
+        setSearch={setSearch}
+        setPage={setPage}
+        customConSx={{ width: 150, height: 150 }}
+        customImgSx={{ width: 150, height: 150 }}
+      />
 
       {/* CONTROLS */}
       <ChoiceButtons
@@ -101,66 +68,39 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
 
       {/* ADDONS */}
       {chosenSlot >= 0 && (
-        <Box>
-          {/* SEARCH BAR */}
-          <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
-
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            flexWrap="wrap"
-            px={25}
-          >
-            {paginate(
-              addons.filter((addon) =>
-                addon.name.toLowerCase().includes(search)
-              ),
-              10,
-              page
-            ).map((addon) => (
-              <ImageSlot
-                key={addon.id}
-                data={addon}
-                containerSx={{
-                  m: 5,
-                  width: 100,
-                  height: 100,
-                  border: "1px solid white",
-                  "&:hover": {
-                    borderColor: "primary.dark",
-                  },
-                }}
-                imageSx={{
-                  width: 100,
-                  height: 100,
-                  objectFit: "contain",
-                }}
-                handleClick={() => {
-                  handleMultiItemChoice(
-                    addon,
-                    chosenSlot,
-                    setChosenSlot,
-                    chosenAddons,
-                    setChosenAddons
-                  );
-                }}
-              />
-            ))}
-          </Box>
-
-          {/* PAGINATION */}
-          <CustomPagination
-            itemsCount={
-              addons.filter((addon) =>
-                addon.name.toLowerCase().includes(search)
-              ).length
-            }
-            itemsPerPage={10}
-            page={page}
-            setPage={setPage}
-          />
-        </Box>
+        <ChoiceList
+          filteredChoices={paginate(
+            addons.filter((addon) => addon.name.toLowerCase().includes(search)),
+            10,
+            page
+          )}
+          handleChoice={(choice) => {
+            handleMultiItemChoice(
+              choice,
+              chosenSlot,
+              setChosenSlot,
+              chosenAddons,
+              setChosenAddons
+            );
+          }}
+          itemsCount={
+            addons.filter((addon) => addon.name.toLowerCase().includes(search))
+              .length
+          }
+          itemsPerPage={10}
+          search={search}
+          setSearch={setSearch}
+          page={page}
+          setPage={setPage}
+          customConSx={{
+            width: 100,
+            height: 100,
+          }}
+          customImgSx={{
+            width: 100,
+            height: 100,
+          }}
+        />
       )}
     </Box>
   );

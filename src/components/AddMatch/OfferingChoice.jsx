@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { Box, Divider } from "@mui/material";
-import { paginate } from "../../utils/paginate";
-import { handleSingleItemChoice } from "../../utils/addMatchUtils";
-import CustomPagination from "../CustomPagination";
-import ImageSlot from "../ImageSlot";
-import SearchBar from "./SearchBar";
 import ChoiceButtons from "./ChoiceButtons";
+import SingleSlotChoice from "./SingleSlotChoice";
+import ChoiceList from "./ChoiceList";
+import { handleSingleItemChoice } from "../../utils/addMatchUtils";
+import { paginate } from "../../utils/paginate";
 
 const OfferingChoice = ({ side, setStep, setData, data }) => {
   const [chosenOffering, setChosenOffering] = useState(
@@ -39,36 +38,23 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
   return (
     <Box>
       {/* OFFERING SLOT */}
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        px={35}
-        py={10}
-      >
-        <ImageSlot
-          data={chosenOffering}
-          containerSx={{
-            width: 150,
-            height: 150,
-            border: "1px solid",
-            borderColor: choosing ? "primary.main" : "white",
-            "&:hover": {
-              borderColor: "primary.dark",
-            },
-          }}
-          imageSx={{
-            width: 150,
-            height: 150,
-            objectFit: "contain",
-          }}
-          handleClick={() => {
-            setChoosing((prevChoosing) => !prevChoosing);
-            setSearch("");
-            setPage(0);
-          }}
-        />
-      </Box>
+      <SingleSlotChoice
+        chosenItem={chosenOffering}
+        choosing={choosing}
+        handleClick={() => {
+          setChoosing((prevChoosing) => !prevChoosing);
+          setSearch("");
+          setPage(0);
+        }}
+        customConSx={{
+          width: 150,
+          height: 150,
+        }}
+        customImgSx={{
+          width: 150,
+          height: 150,
+        }}
+      />
 
       <ChoiceButtons
         resetText="Reset Offering"
@@ -86,64 +72,41 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
 
       {/* OFFERINGS */}
       {choosing && (
-        <Box>
-          {/* SEARCH BAR */}
-          <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
-
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            flexWrap="wrap"
-            px={25}
-          >
-            {paginate(
-              offerings.filter((offering) =>
-                offering.name.toLowerCase().includes(search)
-              ),
-              10,
-              page
-            ).map((offering) => (
-              <ImageSlot
-                key={offering.id}
-                data={offering}
-                containerSx={{
-                  m: 5,
-                  width: 100,
-                  height: 100,
-                  border: "1px solid white",
-                  "&:hover": {
-                    borderColor: "primary.dark",
-                  },
-                }}
-                imageSx={{
-                  width: 100,
-                  height: 100,
-                  objectFit: "contain",
-                }}
-                handleClick={() => {
-                  handleSingleItemChoice(
-                    offering,
-                    chosenOffering,
-                    setChosenOffering,
-                    setChoosing
-                  );
-                }}
-              />
-            ))}
-          </Box>
-
-          <CustomPagination
-            itemsCount={
-              offerings.filter((offering) =>
-                offering.name.toLowerCase().includes(search)
-              ).length
-            }
-            itemsPerPage={10}
-            page={page}
-            setPage={setPage}
-          />
-        </Box>
+        <ChoiceList
+          filteredChoices={paginate(
+            offerings.filter((offering) =>
+              offering.name.toLowerCase().includes(search)
+            ),
+            10,
+            page
+          )}
+          handleChoice={(choice) => {
+            handleSingleItemChoice(
+              choice,
+              chosenOffering,
+              setChosenOffering,
+              setChoosing
+            );
+          }}
+          itemsCount={
+            offerings.filter((offering) =>
+              offering.name.toLowerCase().includes(search)
+            ).length
+          }
+          itemsPerPage={10}
+          search={search}
+          setSearch={setSearch}
+          page={page}
+          setPage={setPage}
+          customConSx={{
+            width: 100,
+            height: 100,
+          }}
+          customImgSx={{
+            width: 100,
+            height: 100,
+          }}
+        />
       )}
     </Box>
   );

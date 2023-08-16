@@ -1,12 +1,6 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@mui/material";
+import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import CharacterRow from "../Matches/CharacterRow";
+import ChoiceButtons from "./ChoiceButtons";
 
 const AddCharacterSummary = ({
   character,
@@ -58,16 +52,12 @@ const AddCharacterSummary = ({
         </Box>
       )}
 
-      <Box textAlign="center">
-        <Button
-          onClick={() => {
-            handleReset();
-          }}
-        >
-          Reset
-        </Button>
-        <Button onClick={handleAdd}>Confirm</Button>
-      </Box>
+      <ChoiceButtons
+        resetText="Reset"
+        handleReset={handleReset}
+        confirmText="Confirm"
+        handleConfirm={handleAdd}
+      />
     </Box>
   );
 };

@@ -3,14 +3,13 @@ import { supabase } from "../../data/supabaseClient";
 import { Box, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import {
-  handleSlotChoice,
   handleSingleItemChoice,
   handleMultiItemChoice,
 } from "../../utils/addMatchUtils";
-import CustomPagination from "../CustomPagination";
-import ImageSlot from "../ImageSlot";
-import SearchBar from "./SearchBar";
 import ChoiceButtons from "./ChoiceButtons";
+import SingleSlotChoice from "./SingleSlotChoice";
+import MultiSlotChoice from "./MultiSlotChoice";
+import ChoiceList from "./ChoiceList";
 
 const SurvivorItem = ({ setStep, setData, data }) => {
   const [chosenItem, setChosenItem] = useState(
@@ -65,73 +64,36 @@ const SurvivorItem = ({ setStep, setData, data }) => {
 
   return (
     <Box>
-      {/* ITEM AND ADDONS SLOTS */}
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        px={35}
-        py={10}
-      >
-        {/* ITEM */}
-        <ImageSlot
-          data={chosenItem}
-          containerSx={{
-            mx: 2,
-            width: 200,
-            height: 200,
-            border: "1px solid",
-            borderColor: itemChoosing ? "primary.main" : "white",
-            "&:hover": {
-              borderColor: "primary.dark",
-            },
-          }}
-          imageSx={{
-            width: 200,
-            height: 200,
-            objectFit: "contain",
-          }}
-          handleClick={() => {
-            setPage(0);
-            setSearch("");
-            setChosenSlot(-1);
-            setItemChoosing((prevChoosing) => !prevChoosing);
-          }}
-        />
+      {/* ITEM SLOTS */}
+      <SingleSlotChoice
+        chosenItem={chosenItem}
+        choosing={itemChoosing}
+        handleClick={() => {
+          setPage(0);
+          setSearch("");
+          setChosenSlot(-1);
+          setItemChoosing((prevChoosing) => !prevChoosing);
+        }}
+        customConSx={{
+          width: 200,
+          height: 200,
+        }}
+        customImgSx={{
+          width: 200,
+          height: 200,
+        }}
+      />
 
-        {/* ADDONS */}
-        {chosenAddons.map((addon, index) => (
-          <ImageSlot
-            key={index}
-            data={addon}
-            containerSx={{
-              mx: 2,
-              width: 125,
-              height: 125,
-              border: "1px solid",
-              borderColor: chosenSlot === index ? "primary.main" : "white",
-              "&:hover": {
-                borderColor: "primary.dark",
-              },
-            }}
-            imageSx={{
-              width: 125,
-              height: 125,
-              objectFit: "contain",
-            }}
-            handleClick={() => {
-              handleSlotChoice(
-                index,
-                chosenSlot,
-                setChosenSlot,
-                setSearch,
-                setPage
-              );
-              setItemChoosing(false);
-            }}
-          />
-        ))}
-      </Box>
+      {/* ADDON SLOTS */}
+      <MultiSlotChoice
+        chosenItems={chosenAddons}
+        chosenSlot={chosenSlot}
+        setChosenSlot={setChosenSlot}
+        setSearch={setSearch}
+        setPage={setPage}
+        customConSx={{ width: 125, height: 125 }}
+        customImgSx={{ width: 125, height: 125 }}
+      />
 
       <ChoiceButtons
         resetText="Reset Item and Addons"
@@ -156,118 +118,92 @@ const SurvivorItem = ({ setStep, setData, data }) => {
 
       <Divider />
 
-      {/* ITEMS AND ADDONS */}
-      {(itemChoosing || (chosenItem && chosenSlot >= 0)) && (
-        <Box>
-          {/* SEARCH BAR */}
-          <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
+      {/* ITEMS  */}
+      {itemChoosing && (
+        <ChoiceList
+          filteredChoices={paginate(
+            items.filter(
+              (item) =>
+                item.name.toLowerCase().includes(search) ||
+                item.category.name.toLowerCase().includes(search)
+            ),
+            10,
+            page
+          )}
+          handleChoice={(choice) => {
+            handleSingleItemChoice(
+              choice,
+              chosenItem,
+              setChosenItem,
+              setItemChoosing
+            );
+            setChosenAddons([null, null]);
+          }}
+          itemsCount={
+            items.filter(
+              (item) =>
+                item.name.toLowerCase().includes(search) ||
+                item.category.name.toLowerCase().includes(search)
+            ).length
+          }
+          itemsPerPage={10}
+          search={search}
+          setSearch={setSearch}
+          page={page}
+          setPage={setPage}
+          customConSx={{
+            width: 150,
+            height: 150,
+          }}
+          customImgSx={{
+            width: 150,
+            height: 150,
+          }}
+        />
+      )}
 
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            flexWrap="wrap"
-            px={25}
-          >
-            {itemChoosing &&
-              paginate(
-                items.filter(
-                  (item) =>
-                    item.name.toLowerCase().includes(search) ||
-                    item.category.name.toLowerCase().includes(search)
-                ),
-                10,
-                page
-              ).map((item) => (
-                <ImageSlot
-                  key={item.id}
-                  data={item}
-                  containerSx={{
-                    m: 5,
-                    width: 150,
-                    height: 150,
-                    border: "1px solid white",
-                    "&:hover": {
-                      borderColor: "primary.dark",
-                    },
-                  }}
-                  imageSx={{
-                    width: 150,
-                    height: 150,
-                    objectFit: "contain",
-                  }}
-                  handleClick={() => {
-                    handleSingleItemChoice(
-                      item,
-                      chosenItem,
-                      setChosenItem,
-                      setItemChoosing
-                    );
-                    setChosenAddons([null, null]);
-                  }}
-                />
-              ))}
-
-            {chosenItem &&
-              chosenSlot >= 0 &&
-              paginate(
-                addons.filter(
-                  (addon) =>
-                    addon.category.id === chosenItem.category.id &&
-                    addon.name.toLowerCase().includes(search)
-                ),
-                10,
-                page
-              ).map((addon) => (
-                <ImageSlot
-                  key={addon.id}
-                  data={addon}
-                  containerSx={{
-                    m: 5,
-                    width: 150,
-                    height: 150,
-                    border: "1px solid white",
-                    "&:hover": {
-                      borderColor: "primary.dark",
-                    },
-                  }}
-                  imageSx={{
-                    width: 150,
-                    height: 150,
-                    objectFit: "contain",
-                  }}
-                  handleClick={() => {
-                    handleMultiItemChoice(
-                      addon,
-                      chosenSlot,
-                      setChosenSlot,
-                      chosenAddons,
-                      setChosenAddons
-                    );
-                  }}
-                />
-              ))}
-          </Box>
-
-          <CustomPagination
-            itemsCount={
-              itemChoosing
-                ? items.filter(
-                    (item) =>
-                      item.name.toLowerCase().includes(search) ||
-                      item.category.name.toLowerCase().includes(search)
-                  ).length
-                : addons.filter(
-                    (addon) =>
-                      addon.category.id === chosenItem.category.id &&
-                      addon.name.toLowerCase().includes(search)
-                  ).length
-            }
-            itemsPerPage={10}
-            page={page}
-            setPage={setPage}
-          />
-        </Box>
+      {/* ADDONS */}
+      {chosenItem && chosenSlot >= 0 && (
+        <ChoiceList
+          filteredChoices={paginate(
+            addons.filter(
+              (addon) =>
+                addon.category.id === chosenItem.category.id &&
+                addon.name.toLowerCase().includes(search)
+            ),
+            10,
+            page
+          )}
+          handleChoice={(choice) => {
+            handleMultiItemChoice(
+              choice,
+              chosenSlot,
+              setChosenSlot,
+              chosenAddons,
+              setChosenAddons
+            );
+          }}
+          itemsCount={
+            addons.filter(
+              (addon) =>
+                addon.category.id === chosenItem.category.id &&
+                addon.name.toLowerCase().includes(search)
+            ).length
+          }
+          itemsPerPage={10}
+          search={search}
+          setSearch={setSearch}
+          page={page}
+          setPage={setPage}
+          customConSx={{
+            width: 150,
+            height: 150,
+          }}
+          customImgSx={{
+            width: 150,
+            height: 150,
+          }}
+        />
       )}
     </Box>
   );

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import AddCharacter from "./AddCharacter";
 import CharacterRow from "../Matches/CharacterRow";
+import ChoiceButtons from "./ChoiceButtons";
 
 const Killer = ({ setStep, setData, data }) => {
   const [killer, setKiller] = useState(
@@ -49,10 +50,11 @@ const Killer = ({ setStep, setData, data }) => {
         handleAddCharacter={handleAddCharacter}
       />
 
-      {/* CONFIRM BUTTON */}
-      <Button
-        sx={{ mt: 5 }}
-        onClick={() => {
+      <ChoiceButtons
+        resetText="Reset"
+        handleReset={() => setKiller(null)}
+        confirmText="Confirm"
+        handleConfirm={() => {
           setData((prevData) => {
             return {
               ...prevData,
@@ -61,9 +63,9 @@ const Killer = ({ setStep, setData, data }) => {
           });
           setStep((prevStep) => prevStep + 1);
         }}
-      >
-        Confirm
-      </Button>
+      />
+
+      <Divider />
     </Box>
   );
 };

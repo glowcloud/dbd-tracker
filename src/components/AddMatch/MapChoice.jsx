@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../../data/supabaseClient";
 import { Box, Divider } from "@mui/material";
+import { supabase } from "../../data/supabaseClient";
 import { paginate } from "../../utils/paginate";
 import { handleSingleItemChoice } from "../../utils/addMatchUtils";
-import CustomPagination from "../CustomPagination";
-import ImageSlot from "../ImageSlot";
-import SearchBar from "./SearchBar";
 import ChoiceButtons from "./ChoiceButtons";
+import ChoiceList from "./ChoiceList";
+import SingleSlotChoice from "./SingleSlotChoice";
 
 const MapChoice = ({ setStep, setData, data }) => {
   const [chosenMap, setChosenMap] = useState(
@@ -39,36 +38,23 @@ const MapChoice = ({ setStep, setData, data }) => {
   return (
     <Box>
       {/* MAP SLOT */}
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        px={35}
-        py={10}
-      >
-        <ImageSlot
-          data={chosenMap}
-          containerSx={{
-            width: 250,
-            height: 200,
-            border: "1px solid",
-            borderColor: choosing ? "primary.main" : "white",
-            "&:hover": {
-              borderColor: "primary.dark",
-            },
-          }}
-          imageSx={{
-            width: 250,
-            height: 200,
-            objectFit: "contain",
-          }}
-          handleClick={() => {
-            setChoosing((prevChoosing) => !prevChoosing);
-            setSearch("");
-            setPage(0);
-          }}
-        />
-      </Box>
+      <SingleSlotChoice
+        chosenItem={chosenMap}
+        choosing={choosing}
+        handleClick={() => {
+          setChoosing((prevChoosing) => !prevChoosing);
+          setSearch("");
+          setPage(0);
+        }}
+        customConSx={{
+          width: 250,
+          height: 200,
+        }}
+        customImgSx={{
+          width: 250,
+          height: 200,
+        }}
+      />
 
       <ChoiceButtons
         resetText="Reset Map"
@@ -86,68 +72,45 @@ const MapChoice = ({ setStep, setData, data }) => {
 
       {/* MAPS */}
       {choosing && (
-        <Box>
-          {/* SEARCH BAR */}
-          <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
-
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            flexWrap="wrap"
-            px={25}
-          >
-            {paginate(
-              maps.filter(
-                (realmMap) =>
-                  realmMap.name.toLowerCase().includes(search) ||
-                  realmMap.realm.name.toLowerCase().includes(search)
-              ),
-              6,
-              page
-            ).map((realmMap) => (
-              <ImageSlot
-                key={realmMap.id}
-                data={realmMap}
-                containerSx={{
-                  m: 5,
-                  width: 250,
-                  height: 200,
-                  border: "1px solid white",
-                  "&:hover": {
-                    borderColor: "primary.dark",
-                  },
-                }}
-                imageSx={{
-                  width: 250,
-                  height: 200,
-                  objectFit: "contain",
-                }}
-                handleClick={() => {
-                  handleSingleItemChoice(
-                    realmMap,
-                    chosenMap,
-                    setChosenMap,
-                    setChoosing
-                  );
-                }}
-              />
-            ))}
-          </Box>
-
-          <CustomPagination
-            itemsCount={
-              maps.filter(
-                (realmMap) =>
-                  realmMap.name.toLowerCase().includes(search) ||
-                  realmMap.realm.name.toLowerCase().includes(search)
-              ).length
-            }
-            itemsPerPage={6}
-            page={page}
-            setPage={setPage}
-          />
-        </Box>
+        <ChoiceList
+          filteredChoices={paginate(
+            maps.filter(
+              (realmMap) =>
+                realmMap.name.toLowerCase().includes(search) ||
+                realmMap.realm.name.toLowerCase().includes(search)
+            ),
+            6,
+            page
+          )}
+          handleChoice={(choice) => {
+            handleSingleItemChoice(
+              choice,
+              chosenMap,
+              setChosenMap,
+              setChoosing
+            );
+          }}
+          itemsCount={
+            maps.filter(
+              (realmMap) =>
+                realmMap.name.toLowerCase().includes(search) ||
+                realmMap.realm.name.toLowerCase().includes(search)
+            ).length
+          }
+          itemsPerPage={6}
+          search={search}
+          setSearch={setSearch}
+          page={page}
+          setPage={setPage}
+          customConSx={{
+            width: 250,
+            height: 200,
+          }}
+          customImgSx={{
+            width: 250,
+            height: 200,
+          }}
+        />
       )}
     </Box>
   );
