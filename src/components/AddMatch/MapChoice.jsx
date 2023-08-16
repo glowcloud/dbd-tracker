@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
-import { Box, Button, Divider } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import { handleSingleItemChoice } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
 import ImageSlot from "../ImageSlot";
 import SearchBar from "./SearchBar";
+import ChoiceButtons from "./ChoiceButtons";
 
 const MapChoice = ({ setStep, setData, data }) => {
   const [chosenMap, setChosenMap] = useState(
@@ -69,18 +70,17 @@ const MapChoice = ({ setStep, setData, data }) => {
         />
       </Box>
 
-      <Button
-        variant="outlined"
-        sx={{ my: 5, mx: 2 }}
-        onClick={() => {
+      <ChoiceButtons
+        resetText="Reset Map"
+        handleReset={() => setChosenMap(null)}
+        confirmText="Confirm Map"
+        handleConfirm={() => {
           setData((prevData) => {
             return { ...prevData, realmMap: chosenMap };
           });
           setStep((prevStep) => prevStep + 1);
         }}
-      >
-        Confirm Map
-      </Button>
+      />
 
       <Divider />
 

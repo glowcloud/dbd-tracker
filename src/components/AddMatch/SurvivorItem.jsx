@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
-import { Box, Button, Divider } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import {
   handleSlotChoice,
@@ -10,6 +10,7 @@ import {
 import CustomPagination from "../CustomPagination";
 import ImageSlot from "../ImageSlot";
 import SearchBar from "./SearchBar";
+import ChoiceButtons from "./ChoiceButtons";
 
 const SurvivorItem = ({ setStep, setData, data }) => {
   const [chosenItem, setChosenItem] = useState(
@@ -132,20 +133,14 @@ const SurvivorItem = ({ setStep, setData, data }) => {
         ))}
       </Box>
 
-      <Button
-        variant="outlined"
-        sx={{ my: 5, mx: 2 }}
-        onClick={() => {
+      <ChoiceButtons
+        resetText="Reset Item and Addons"
+        handleReset={() => {
           setChosenItem(null);
           setChosenAddons([null, null]);
         }}
-      >
-        Reset Item and Addons
-      </Button>
-      <Button
-        variant="outlined"
-        sx={{ my: 5, mx: 2 }}
-        onClick={() => {
+        confirmText="Confirm Item and Addons"
+        handleConfirm={() => {
           setData((prevData) => {
             return {
               ...prevData,
@@ -157,9 +152,7 @@ const SurvivorItem = ({ setStep, setData, data }) => {
           });
           setStep((prevStep) => prevStep + 1);
         }}
-      >
-        Confirm Item and Addons
-      </Button>
+      />
 
       <Divider />
 

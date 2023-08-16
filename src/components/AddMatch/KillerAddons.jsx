@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
-import { Box, Button, Divider } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import {
   handleSlotChoice,
@@ -9,6 +9,7 @@ import {
 import CustomPagination from "../CustomPagination";
 import ImageSlot from "../ImageSlot";
 import SearchBar from "./SearchBar";
+import ChoiceButtons from "./ChoiceButtons";
 
 const KillerAddons = ({ killer, setStep, setData, data }) => {
   const [chosenAddons, setChosenAddons] = useState(
@@ -81,30 +82,20 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
       </Box>
 
       {/* CONTROLS */}
-      <Box>
-        <Button
-          variant="outlined"
-          sx={{ my: 5, mx: 2 }}
-          onClick={() => setChosenAddons([null, null])}
-        >
-          Reset Addons
-        </Button>
-        <Button
-          variant="outlined"
-          sx={{ my: 5, mx: 2 }}
-          onClick={() => {
-            setData((prevData) => {
-              return {
-                ...prevData,
-                sideData: { ...prevData.sideData, addons: chosenAddons },
-              };
-            });
-            setStep((prevStep) => prevStep + 1);
-          }}
-        >
-          Confirm Addons
-        </Button>
-      </Box>
+      <ChoiceButtons
+        resetText="Reset Addons"
+        handleReset={() => setChosenAddons([null, null])}
+        confirmText="Confirm Addons"
+        handleConfirm={() => {
+          setData((prevData) => {
+            return {
+              ...prevData,
+              sideData: { ...prevData.sideData, addons: chosenAddons },
+            };
+          });
+          setStep((prevStep) => prevStep + 1);
+        }}
+      />
 
       <Divider />
 

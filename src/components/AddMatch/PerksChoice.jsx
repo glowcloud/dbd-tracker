@@ -1,4 +1,4 @@
-import { Box, Button, Divider } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import { useState, useEffect } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { paginate } from "../../utils/paginate";
@@ -9,6 +9,7 @@ import {
 import CustomPagination from "../CustomPagination";
 import ImageSlot from "../ImageSlot";
 import SearchBar from "./SearchBar";
+import ChoiceButtons from "./ChoiceButtons";
 
 const PerksChoice = ({ side, setStep, data, setData }) => {
   const [chosenPerks, setChosenPerks] = useState(
@@ -76,27 +77,17 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
       </Box>
 
       {/* CONTROLS */}
-      <Box>
-        <Button
-          variant="outlined"
-          sx={{ my: 5, mx: 2 }}
-          onClick={() => setChosenPerks([null, null, null, null])}
-        >
-          Reset Perks
-        </Button>
-        <Button
-          variant="outlined"
-          sx={{ my: 5, mx: 2 }}
-          onClick={() => {
-            setData((prevData) => {
-              return { ...prevData, perks: chosenPerks };
-            });
-            setStep((prevStep) => prevStep + 1);
-          }}
-        >
-          Confirm Perks
-        </Button>
-      </Box>
+      <ChoiceButtons
+        resetText="Reset Perks"
+        handleReset={() => setChosenPerks([null, null, null, null])}
+        confirmText="Confirm Perks"
+        handleConfirm={() => {
+          setData((prevData) => {
+            return { ...prevData, perks: chosenPerks };
+          });
+          setStep((prevStep) => prevStep + 1);
+        }}
+      />
 
       <Divider />
 

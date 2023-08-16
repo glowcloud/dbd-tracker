@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
-import { Box, Button, Divider } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import { handleSingleItemChoice } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
 import ImageSlot from "../ImageSlot";
 import SearchBar from "./SearchBar";
+import ChoiceButtons from "./ChoiceButtons";
 
 const OfferingChoice = ({ side, setStep, setData, data }) => {
   const [chosenOffering, setChosenOffering] = useState(
@@ -69,18 +70,17 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
         />
       </Box>
 
-      <Button
-        variant="outlined"
-        sx={{ my: 5, mx: 2 }}
-        onClick={() => {
+      <ChoiceButtons
+        resetText="Reset Offering"
+        handleReset={() => setChosenOffering(null)}
+        confirmText="Confirm Offering"
+        handleConfirm={() => {
           setData((prevData) => {
             return { ...prevData, offering: chosenOffering };
           });
           setStep((prevStep) => prevStep + 1);
         }}
-      >
-        Confirm Offering
-      </Button>
+      />
 
       <Divider />
 
