@@ -1,4 +1,4 @@
-import { Box, Button, Divider, TextField } from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 import { useState, useEffect } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { paginate } from "../../utils/paginate";
@@ -8,6 +8,7 @@ import {
 } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
 import ImageSlot from "../ImageSlot";
+import SearchBar from "./SearchBar";
 
 const PerksChoice = ({ side, setStep, data, setData }) => {
   const [chosenPerks, setChosenPerks] = useState(
@@ -20,7 +21,11 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
 
   useEffect(() => {
     const getPerks = async () => {
-      const { data } = await supabase.from("perks").select().eq("side", side);
+      const { data } = await supabase
+        .from("perks")
+        .select()
+        .eq("side", side)
+        .order("name");
       setPerks(data);
     };
 
@@ -99,23 +104,7 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
       {chosenSlot >= 0 && (
         <Box>
           {/* SEARCH BAR */}
-          <Box
-            component="form"
-            autoComplete="off"
-            px={40}
-            py={5}
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <TextField
-              fullWidth
-              label="Search"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(0);
-              }}
-            />
-          </Box>
+          <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
 
           <Box
             display="flex"

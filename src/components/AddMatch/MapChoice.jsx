@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
-import { Box, Button, TextField, Divider } from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import { handleSingleItemChoice } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
 import ImageSlot from "../ImageSlot";
+import SearchBar from "./SearchBar";
 
 const MapChoice = ({ setStep, setData, data }) => {
   const [chosenMap, setChosenMap] = useState(
@@ -17,13 +18,17 @@ const MapChoice = ({ setStep, setData, data }) => {
 
   useEffect(() => {
     const getMaps = async () => {
-      const { data } = await supabase.from("maps").select(
-        `id,
+      const { data } = await supabase
+        .from("maps")
+        .select(
+          `id,
         name, 
         image,
-        realm: realm_id ( id, name )
+        realm: realm_id ( id, created_at, name )
         `
-      );
+        )
+        .order("realm(created_at)");
+      console.log(data);
       setMaps(data);
     };
 
@@ -83,23 +88,7 @@ const MapChoice = ({ setStep, setData, data }) => {
       {choosing && (
         <Box>
           {/* SEARCH BAR */}
-          <Box
-            component="form"
-            autoComplete="off"
-            px={40}
-            py={5}
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <TextField
-              fullWidth
-              label="Search"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(0);
-              }}
-            />
-          </Box>
+          <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
 
           <Box
             display="flex"
@@ -154,7 +143,7 @@ const MapChoice = ({ setStep, setData, data }) => {
                   realmMap.realm.name.toLowerCase().includes(search)
               ).length
             }
-            itemsPerPage={10}
+            itemsPerPage={6}
             page={page}
             setPage={setPage}
           />

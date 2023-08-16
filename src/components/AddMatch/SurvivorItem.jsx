@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
-import { Box, Button, TextField, Divider } from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import {
   handleSlotChoice,
@@ -9,6 +9,7 @@ import {
 } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
 import ImageSlot from "../ImageSlot";
+import SearchBar from "./SearchBar";
 
 const SurvivorItem = ({ setStep, setData, data }) => {
   const [chosenItem, setChosenItem] = useState(
@@ -28,26 +29,32 @@ const SurvivorItem = ({ setStep, setData, data }) => {
 
   useEffect(() => {
     const getItems = async () => {
-      const { data } = await supabase.from("items").select(
-        `id,
+      const { data } = await supabase
+        .from("items")
+        .select(
+          `id,
               name,
               image, 
               rarity: rarity_id ( id, created_at, name ), 
               category: category_id (id, name)
               `
-      );
+        )
+        .order("rarity(created_at)", { ascending: false });
       setItems(data);
     };
 
     const getAddons = async () => {
-      const { data } = await supabase.from("item_addons").select(
-        `id,
+      const { data } = await supabase
+        .from("item_addons")
+        .select(
+          `id,
               name,
               image, 
               rarity: rarity_id ( id, created_at, name ), 
               category: category_id (id, name)
               `
-      );
+        )
+        .order("rarity(created_at)", { ascending: false });
       setAddons(data);
     };
 
@@ -160,23 +167,7 @@ const SurvivorItem = ({ setStep, setData, data }) => {
       {(itemChoosing || (chosenItem && chosenSlot >= 0)) && (
         <Box>
           {/* SEARCH BAR */}
-          <Box
-            component="form"
-            autoComplete="off"
-            px={40}
-            py={5}
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <TextField
-              fullWidth
-              label="Search"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(0);
-              }}
-            />
-          </Box>
+          <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
 
           <Box
             display="flex"

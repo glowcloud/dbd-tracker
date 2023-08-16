@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
-import { Box, Button, TextField, Divider } from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import { handleSingleItemChoice } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
 import ImageSlot from "../ImageSlot";
+import SearchBar from "./SearchBar";
 
 const OfferingChoice = ({ side, setStep, setData, data }) => {
   const [chosenOffering, setChosenOffering] = useState(
@@ -26,7 +27,8 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
             rarity: rarity_id ( id, created_at, name )
             `
         )
-        .in("side", ["both", side]);
+        .in("side", ["both", side])
+        .order("rarity(created_at)", { ascending: false });
       setOfferings(data);
     };
 
@@ -86,23 +88,7 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
       {choosing && (
         <Box>
           {/* SEARCH BAR */}
-          <Box
-            component="form"
-            autoComplete="off"
-            px={40}
-            py={5}
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <TextField
-              fullWidth
-              label="Search"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(0);
-              }}
-            />
-          </Box>
+          <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
 
           <Box
             display="flex"

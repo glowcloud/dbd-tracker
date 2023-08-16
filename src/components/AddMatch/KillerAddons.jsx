@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
-import { Box, Button, Divider, TextField } from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import {
   handleSlotChoice,
@@ -8,6 +8,7 @@ import {
 } from "../../utils/addMatchUtils";
 import CustomPagination from "../CustomPagination";
 import ImageSlot from "../ImageSlot";
+import SearchBar from "./SearchBar";
 
 const KillerAddons = ({ killer, setStep, setData, data }) => {
   const [chosenAddons, setChosenAddons] = useState(
@@ -29,7 +30,8 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
               rarity: rarity_id ( id, created_at, name )
               `
         )
-        .eq("killer_id", killer.id);
+        .eq("killer_id", killer.id)
+        .order("rarity(created_at)", { ascending: false });
       setAddons(data);
     };
 
@@ -110,23 +112,7 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
       {chosenSlot >= 0 && (
         <Box>
           {/* SEARCH BAR */}
-          <Box
-            component="form"
-            autoComplete="off"
-            px={40}
-            py={5}
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <TextField
-              fullWidth
-              label="Search"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(0);
-              }}
-            />
-          </Box>
+          <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
 
           <Box
             display="flex"
@@ -172,6 +158,7 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
             ))}
           </Box>
 
+          {/* PAGINATION */}
           <CustomPagination
             itemsCount={
               addons.filter((addon) =>
