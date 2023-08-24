@@ -14,7 +14,7 @@ const SingleSlotChoice = ({
       alignItems="center"
       justifyContent="center"
       px={35}
-      py={10}
+      py={5}
     >
       <ImageSlot
         data={chosenItem}

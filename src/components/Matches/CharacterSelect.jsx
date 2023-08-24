@@ -7,7 +7,7 @@ const CharacterSelect = ({
   side,
 }) => {
   return (
-    <FormControl sx={{ width: 300, my: 2 }}>
+    <FormControl sx={{ width: 300, mt: 4, mb: 2 }}>
       <InputLabel>Character</InputLabel>
       <Select
         value={characterChoice}

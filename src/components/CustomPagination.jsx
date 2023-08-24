@@ -2,7 +2,7 @@ import { Pagination, Stack } from "@mui/material";
 
 const CustomPagination = ({ itemsCount, itemsPerPage, page, setPage }) => {
   return (
-    <Stack alignItems="center" justifyContent="center" my={2}>
+    <Stack alignItems="center" justifyContent="center" mb={2} mt={5}>
       <Pagination
         count={Math.ceil(itemsCount / itemsPerPage)}
         page={page + 1}

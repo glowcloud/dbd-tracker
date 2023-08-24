@@ -2,7 +2,7 @@ import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
 const SurvivorChartSelect = ({ chartType, setChartType }) => {
   return (
-    <FormControl sx={{ width: 300, my: 2 }}>
+    <FormControl sx={{ width: 300, my: 4 }}>
       <InputLabel>Chart Choice</InputLabel>
       <Select
         value={chartType}

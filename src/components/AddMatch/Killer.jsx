@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import AddCharacter from "./AddCharacter";
 import CharacterRow from "../Matches/CharacterRow";
 import ChoiceButtons from "./ChoiceButtons";
@@ -20,12 +20,15 @@ const Killer = ({ setStep, setData, data }) => {
 
   return (
     <Box>
+      <Typography variant="h4" mt={4} mb={6}>
+        Choose the killer:
+      </Typography>
       <Box
         onClick={() => {
           setOpen(true);
         }}
         sx={{
-          mx: 5,
+          mx: { lg: 5, xl: 25 },
           "&:hover": {
             cursor: "pointer",
           },

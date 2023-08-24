@@ -5,7 +5,7 @@ const SearchBar = ({ search, setSearch, setPage }) => {
     <Box
       component="form"
       autoComplete="off"
-      px={40}
+      px={{ lg: 40, xl: 75 }}
       py={5}
       onSubmit={(e) => e.preventDefault()}
     >

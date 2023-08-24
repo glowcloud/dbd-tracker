@@ -1,4 +1,11 @@
-import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import CharacterRow from "../Matches/CharacterRow";
 import ChoiceButtons from "./ChoiceButtons";
 
@@ -11,6 +18,10 @@ const AddCharacterSummary = ({
 }) => {
   return (
     <Box>
+      <Typography variant="h4" my={4}>
+        Summary
+      </Typography>
+
       <CharacterRow
         data={{
           ...character,

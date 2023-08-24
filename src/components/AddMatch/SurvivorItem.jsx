@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import {
   handleSingleItemChoice,
@@ -11,7 +11,7 @@ import SingleSlotChoice from "./SingleSlotChoice";
 import MultiSlotChoice from "./MultiSlotChoice";
 import ChoiceList from "./ChoiceList";
 
-const SurvivorItem = ({ setStep, setData, data }) => {
+const SurvivorItem = ({ setStep, setData, data, addCharacter }) => {
   const [chosenItem, setChosenItem] = useState(
     data?.sideData?.item?.item ? data.sideData.item.item : null
   );
@@ -64,6 +64,12 @@ const SurvivorItem = ({ setStep, setData, data }) => {
 
   return (
     <Box>
+      <Typography variant="h4" my={4}>
+        {addCharacter
+          ? "Choose the item and addons:"
+          : "Choose your item and addons:"}
+      </Typography>
+
       {/* ITEM SLOTS */}
       <SingleSlotChoice
         chosenItem={chosenItem}
@@ -93,6 +99,8 @@ const SurvivorItem = ({ setStep, setData, data }) => {
         setPage={setPage}
         customConSx={{ width: 125, height: 125 }}
         customImgSx={{ width: 125, height: 125 }}
+        itemChoice
+        setItemChoosing={setItemChoosing}
       />
 
       <ChoiceButtons

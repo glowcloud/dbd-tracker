@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { supabase } from "../../data/supabaseClient";
 import { paginate } from "../../utils/paginate";
 import { handleSingleItemChoice } from "../../utils/addMatchUtils";
@@ -37,6 +37,10 @@ const MapChoice = ({ setStep, setData, data }) => {
 
   return (
     <Box>
+      <Typography variant="h4" my={4}>
+        Choose the map:
+      </Typography>
+
       {/* MAP SLOT */}
       <SingleSlotChoice
         chosenItem={chosenMap}

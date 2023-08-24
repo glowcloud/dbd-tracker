@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import CharacterChoice from "./CharacterChoice";
 import PerksChoice from "./PerksChoice";
 import KillerAddons from "./KillerAddons";
@@ -68,9 +68,10 @@ const KillerSteps = ({ step, setStep, data, setData, addMatch }) => {
       {step === 8 && (
         <>
           <Summary data={{ ...data, ...data.sideData }} />
-          <Button sx={{ mt: 5 }} onClick={addMatch}>
+          <Button variant="outlined" sx={{ my: 5 }} onClick={addMatch}>
             Add Match
           </Button>
+          <Divider />
         </>
       )}
     </>

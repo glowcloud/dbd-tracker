@@ -13,7 +13,7 @@ const ViewButtons = ({
       <Button
         variant="outlined"
         sx={{
-          my: 2,
+          mt: 2,
           mx: 1,
         }}
         onClick={() => {
@@ -26,7 +26,7 @@ const ViewButtons = ({
       <Button
         variant="outlined"
         sx={{
-          my: 2,
+          mt: 2,
           mx: 1,
         }}
         onClick={() => {

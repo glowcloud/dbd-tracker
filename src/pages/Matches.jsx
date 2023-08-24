@@ -25,7 +25,7 @@ const Matches = () => {
   }, []);
 
   return (
-    <Box textAlign="center">
+    <Box textAlign="center" mt={5}>
       {/* LOADING */}
       {loading && <Typography>Loading...</Typography>}
 
@@ -38,7 +38,7 @@ const Matches = () => {
       )}
 
       {!loading && side && (
-        <Box>
+        <>
           {/* VIEW BUTTONS */}
           <ViewButtons
             showStats={showStats}
@@ -68,7 +68,7 @@ const Matches = () => {
               setCurrentPage={setCurrentPage}
             />
           )}
-        </Box>
+        </>
       )}
     </Box>
   );

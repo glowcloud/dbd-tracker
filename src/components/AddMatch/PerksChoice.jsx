@@ -1,4 +1,4 @@
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { supabase } from "../../data/supabaseClient";
 import { paginate } from "../../utils/paginate";
@@ -7,7 +7,7 @@ import ChoiceButtons from "./ChoiceButtons";
 import MultiSlotChoice from "./MultiSlotChoice";
 import ChoiceList from "./ChoiceList";
 
-const PerksChoice = ({ side, setStep, data, setData }) => {
+const PerksChoice = ({ side, setStep, data, setData, addCharacter }) => {
   const [chosenPerks, setChosenPerks] = useState(
     data?.perks?.length > 0 ? data.perks : [null, null, null, null]
   );
@@ -31,6 +31,9 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
 
   return (
     <Box>
+      <Typography variant="h4" my={4}>
+        {addCharacter ? "Choose the perks:" : "Choose your perks:"}
+      </Typography>
       {/* PERK SLOTS */}
       <MultiSlotChoice
         chosenItems={chosenPerks}
@@ -48,6 +51,7 @@ const PerksChoice = ({ side, setStep, data, setData }) => {
           height: 100,
           transform: "rotate(-45deg)",
         }}
+        addCharacter
       />
 
       {/* CONTROLS */}

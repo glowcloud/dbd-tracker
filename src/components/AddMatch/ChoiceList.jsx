@@ -25,7 +25,7 @@ const ChoiceList = ({
         alignItems="center"
         justifyContent="center"
         flexWrap="wrap"
-        px={25}
+        px={{ lg: 25, xl: 55 }}
       >
         {filteredChoices.map((choice) => (
           <ImageSlot

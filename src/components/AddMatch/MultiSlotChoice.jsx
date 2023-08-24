@@ -10,14 +10,17 @@ const MultiSlotChoice = ({
   setPage,
   customConSx,
   customImgSx,
+  itemChoice,
+  setItemChoosing,
+  addCharacter,
 }) => {
   return (
     <Box
       display="flex"
       alignItems="center"
       justifyContent="center"
-      px={35}
-      py={10}
+      px={addCharacter ? 20 : 35}
+      py={5}
     >
       {chosenItems.map((addon, index) => (
         <ImageSlot
@@ -37,6 +40,9 @@ const MultiSlotChoice = ({
             ...customImgSx,
           }}
           handleClick={() => {
+            if (itemChoice) {
+              setItemChoosing(false);
+            }
             handleSlotChoice(
               index,
               chosenSlot,

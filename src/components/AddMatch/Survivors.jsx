@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import AddCharacter from "./AddCharacter";
 import CharacterRow from "../Matches/CharacterRow";
 import ChoiceButtons from "./ChoiceButtons";
@@ -29,6 +29,10 @@ const Survivors = ({ side, setStep, setData, data }) => {
 
   return (
     <Box>
+      <Typography variant="h4" mt={4} mb={6}>
+        Choose the survivors:
+      </Typography>
+
       {chosenCharacters.map((op, index) => (
         <Box
           key={index}
@@ -37,7 +41,7 @@ const Survivors = ({ side, setStep, setData, data }) => {
             setOpen(true);
           }}
           sx={{
-            mx: 5,
+            mx: { lg: 5, xl: 25 },
             "&:hover": {
               cursor: "pointer",
             },

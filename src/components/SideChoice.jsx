@@ -4,8 +4,17 @@ import killerIcon from "../assets/other/killerIcon.png";
 
 const SideChoice = ({ handleSurvivorChoice, handleKillerChoice }) => {
   return (
-    <Box>
-      <Typography variant="h4" mt={10} mb={5}>
+    <Box
+      textAlign="center"
+      sx={{
+        margin: "0",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+      }}
+    >
+      <Typography variant="h4" mb={5}>
         Choose your side:
       </Typography>
       <Box display="flex" alignItems="center" justifyContent="center">

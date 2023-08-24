@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { paginate } from "../../utils/paginate";
 import { handleMultiItemChoice } from "../../utils/addMatchUtils";
 import ChoiceButtons from "./ChoiceButtons";
 import ChoiceList from "./ChoiceList";
 import MultiSlotChoice from "./MultiSlotChoice";
 
-const KillerAddons = ({ killer, setStep, setData, data }) => {
+const KillerAddons = ({ killer, setStep, setData, data, addCharacter }) => {
   const [chosenAddons, setChosenAddons] = useState(
     data?.sideData?.addons?.length > 0 ? data.sideData.addons : [null, null]
   );
@@ -37,6 +37,10 @@ const KillerAddons = ({ killer, setStep, setData, data }) => {
 
   return (
     <Box>
+      <Typography variant="h4" my={4}>
+        {addCharacter ? "Choose the addons:" : "Choose your addons:"}
+      </Typography>
+
       {/* ADDON SLOTS */}
       <MultiSlotChoice
         chosenItems={chosenAddons}

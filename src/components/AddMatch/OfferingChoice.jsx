@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabaseClient";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import ChoiceButtons from "./ChoiceButtons";
 import SingleSlotChoice from "./SingleSlotChoice";
 import ChoiceList from "./ChoiceList";
 import { handleSingleItemChoice } from "../../utils/addMatchUtils";
 import { paginate } from "../../utils/paginate";
 
-const OfferingChoice = ({ side, setStep, setData, data }) => {
+const OfferingChoice = ({ side, setStep, setData, data, addCharacter }) => {
   const [chosenOffering, setChosenOffering] = useState(
     data?.offering ? data.offering : null
   );
@@ -37,6 +37,10 @@ const OfferingChoice = ({ side, setStep, setData, data }) => {
 
   return (
     <Box>
+      <Typography variant="h4" my={4}>
+        {addCharacter ? "Choose the offering:" : "Choose your offering:"}
+      </Typography>
+
       {/* OFFERING SLOT */}
       <SingleSlotChoice
         chosenItem={chosenOffering}

@@ -25,8 +25,9 @@ const Home = () => {
         transform: "translate(-50%, -50%)",
       }}
     >
+      <Typography variant="h3">Welcome to</Typography>
       <Typography variant="h3" fontWeight="bold" gutterBottom>
-        Welcome to Dead by Daylight Tracker
+        Dead by Daylight Tracker
       </Typography>
       <Typography
         component={Link}
@@ -34,7 +35,7 @@ const Home = () => {
         onClick={handleNavigate}
         sx={{
           textDecoration: "none",
-          mx: 2,
+          textAlign: "center",
           "&:visited": {
             color: "inherit",
           },
