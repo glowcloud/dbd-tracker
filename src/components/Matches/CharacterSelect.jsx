@@ -5,6 +5,7 @@ const CharacterSelect = ({
   setCharacterChoice,
   matches,
   side,
+  setCurrentPage,
 }) => {
   return (
     <FormControl sx={{ width: 300, mt: 4, mb: 2 }}>
@@ -12,7 +13,10 @@ const CharacterSelect = ({
       <Select
         value={characterChoice}
         label="chart"
-        onChange={(e) => setCharacterChoice(e.target.value)}
+        onChange={(e) => {
+          setCharacterChoice(e.target.value);
+          setCurrentPage(0);
+        }}
         defaultValue="all"
       >
         <MenuItem value="all">All</MenuItem>

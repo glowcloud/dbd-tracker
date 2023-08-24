@@ -23,6 +23,7 @@ const MatchesPreviews = ({
         setCharacterChoice={setCharacterChoice}
         matches={matches}
         side={side}
+        setCurrentPage={setCurrentPage}
       />
 
       {/* MATCHES */}
@@ -38,7 +39,7 @@ const MatchesPreviews = ({
         <Box
           key={index}
           sx={{
-            mx: 5,
+            mx: { lg: 3, xl: 25 },
             "&:hover": {
               cursor: "pointer",
             },
