@@ -4,6 +4,7 @@ import {
   getGeneralData,
   getAverageKillerData,
   getAveragePerkData,
+  getAverageMapData,
 } from "../../utils/killerCharts";
 import {
   getGeneralData as getGeneralSurvivorData,
@@ -13,6 +14,7 @@ import {
   getAverageKillerEscapes,
   getKillersCount,
   getKillerPerksCount,
+  getAverageMapEscapes,
 } from "../../utils/survivorCharts";
 import {
   getSurvivorsCount,
@@ -35,6 +37,8 @@ const killerDataSwitch = (chartType, matches) => {
       return getSurvivorPerksCount(matches);
     case "mapsCount":
       return getMapsData(matches);
+    case "mapsRate":
+      return getAverageMapData(matches);
     default:
       return getGeneralData(matches);
   }
@@ -60,6 +64,8 @@ const survivorDataSwitch = (chartType, matches) => {
       return getSurvivorsCount(matches);
     case "mapsCount":
       return getMapsData(matches);
+    case "mapsEscapes":
+      return getAverageMapEscapes(matches);
     default:
       return getGeneralSurvivorData(matches);
   }

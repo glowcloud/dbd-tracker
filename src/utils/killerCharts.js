@@ -114,4 +114,57 @@ const getAveragePerkData = (matches) => {
     .sort((a, b) => b.count - a.count);
 };
 
-export { getGeneralData, getAverageKillerData, getAveragePerkData };
+// AVERAGE KILL RATE BY MAP
+const getAverageMapData = (matches) => {
+  const dataMap = new Map();
+
+  matches.forEach((match) => {
+    if (match.result) {
+      let result = 0;
+      switch (match.result) {
+        case "1 kill":
+          result = 1;
+          break;
+        case "2 kills":
+          result = 2;
+          break;
+        case "3 kills":
+          result = 3;
+          break;
+        case "4 kills":
+          result = 4;
+          break;
+        default:
+          break;
+      }
+      if (match.realmMap) {
+        if (dataMap.has(match.realmMap.name)) {
+          dataMap.set(
+            match.realmMap.name,
+            dataMap.get(match.realmMap.name) + result
+          );
+        } else {
+          dataMap.set(match.realmMap.name, result);
+        }
+      }
+    }
+  });
+
+  return [...dataMap]
+    .map((item) => {
+      return {
+        name: item[0],
+        count:
+          item[1] /
+          matches.filter((match) => match?.realmMap?.name === item[0]).length,
+      };
+    })
+    .sort((a, b) => b.count - a.count);
+};
+
+export {
+  getGeneralData,
+  getAverageKillerData,
+  getAveragePerkData,
+  getAverageMapData,
+};

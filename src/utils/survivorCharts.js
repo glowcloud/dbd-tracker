@@ -135,8 +135,7 @@ const getAverageKillerEscapes = (matches) => {
 
   matches.forEach((match) => {
     if (match.killer) {
-      let result = 0;
-      if (match.escaped) result = 1;
+      const result = match.escaped ? 1 : 0;
       if (dataMap.has(match.killer.character.name)) {
         dataMap.set(
           match.killer.character.name,
@@ -216,6 +215,36 @@ const getKillerPerksCount = (matches) => {
     .sort((a, b) => b.count - a.count);
 };
 
+// AVERAGE ESCAPE RATE BY MAP
+const getAverageMapEscapes = (matches) => {
+  const dataMap = new Map();
+
+  matches.forEach((match) => {
+    if (match.realmMap) {
+      const result = match.escaped ? 1 : 0;
+      if (dataMap.has(match.realmMap.name)) {
+        dataMap.set(
+          match.realmMap.name,
+          dataMap.get(match.realmMap.name) + result
+        );
+      } else {
+        dataMap.set(match.realmMap.name, result);
+      }
+    }
+  });
+
+  return [...dataMap]
+    .map((item) => {
+      return {
+        name: item[0],
+        count:
+          item[1] /
+          matches.filter((match) => match?.realmMap?.name === item[0]).length,
+      };
+    })
+    .sort((a, b) => b.count - a.count);
+};
+
 export {
   getGeneralData,
   getAverageSurvivorData,
@@ -224,4 +253,5 @@ export {
   getAverageKillerEscapes,
   getKillersCount,
   getKillerPerksCount,
+  getAverageMapEscapes,
 };

@@ -15,6 +15,7 @@ const KillerChartSelect = ({ chartType, setChartType }) => {
         <MenuItem value="survivorsCount">Survivors count</MenuItem>
         <MenuItem value="survivorPerks">Survivor perks count</MenuItem>
         <MenuItem value="mapsCount">Maps count</MenuItem>
+        <MenuItem value="mapsRate">Average kill rate by map</MenuItem>
       </Select>
     </FormControl>
   );

@@ -21,6 +21,7 @@ const SurvivorChartSelect = ({ chartType, setChartType }) => {
         <MenuItem value="survivorPerksCount">Survivor perks count</MenuItem>
         <MenuItem value="survivorsCount">Survivor count</MenuItem>
         <MenuItem value="mapsCount">Maps count</MenuItem>
+        <MenuItem value="mapsEscapes">Your average escape rate by map</MenuItem>
       </Select>
     </FormControl>
   );

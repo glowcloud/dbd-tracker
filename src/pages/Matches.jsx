@@ -24,6 +24,8 @@ const Matches = () => {
     getMatches();
   }, []);
 
+  console.log(matches);
+
   return (
     <Box textAlign="center" mt={5}>
       {/* LOADING */}
